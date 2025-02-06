@@ -11,7 +11,10 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        verde: "#709A7C"
+        verde: "#709A7C",
+        bgmarrom: "#C08A72",
+        marrom: "#AD684A"
+
       },
     },
   },

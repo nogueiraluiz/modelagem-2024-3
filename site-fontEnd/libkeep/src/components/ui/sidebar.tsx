@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Title from "../text/title";
 
 interface SidebarProps {
     nomeusuario: string;
@@ -11,7 +12,7 @@ export default function Sidebar({ nomeusuario, caminhoimagem }: SidebarProps) {
             <div>
                 <div className="flex flex-row items-center flex-nowrap justify-around p-4">
                     <Image src="/logo.svg" width={100} height={100} alt="KeepLit" />
-                    <h1 className="text-5xl">KeepLit</h1>
+                    <Title title="KeepLit" />
                 </div>
                 <div className="flex flex-row flex-nowrap justify-start p-4">
                     <div className="flex flex-row flex-nowrap justify-center items-center p-4 gap-3">
