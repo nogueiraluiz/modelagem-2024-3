@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function Home() {
   return (
     <main className="flex flex-row flex-nowrap justify-start items-start">
-      <Sidebar caminhoimagem="/logo.svg" nomeusuario="lele" />
+      <Sidebar caminhoimagem="/logo.svg" nomeusuario="Igor Mattos" />
       <div className="grow m-0 p-0"></div>
       <Criaposts />
     </main>
