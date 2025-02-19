@@ -1,0 +1,193 @@
+/* styles.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Poppins&display=swap');
+
+:root {
+  --primary-green: #709A7C;
+  --primary-brown: #C08A72;
+  --secondary-brown: #AD684A;
+  --accent-yellow: #E2AC59;
+  --dark-gray: #6D6D6D;
+  --light-beige: #EAC690;
+}
+
+/* Layout Principal */
+.macbook-screen {
+  position: relative;
+  width: 1728px;
+  height: 1041px;
+  background: #FFFFFF;
+  display: flex;
+  font-family: 'Inter', sans-serif;
+}
+
+.main-background {
+  background: #FFFFFF;
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+/* Navbar Esquerda */
+.left-navbar {
+  position: absolute;
+  width: 280px;
+  height: 1041px;
+  background: var(--primary-green);
+  padding: 20px;
+}
+
+.logo {
+  font-family: 'Poppins', sans-serif;
+  font-size: 40px;
+  color: white;
+  margin: 20px 0 50px 25px;
+}
+
+.user-profile {
+  position: absolute;
+  top: 150px;
+  left: 30px;
+}
+
+.user-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--dark-gray);
+  margin-bottom: 20px;
+}
+
+.logout-button {
+  position: absolute;
+  bottom: 50px;
+  left: 30px;
+  color: white;
+  cursor: pointer;
+}
+
+.logout-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+/* Conteúdo Central */
+.main-container {
+  position: absolute;
+  left: 280px;
+  width: 960px;
+}
+
+.main-header {
+  position: relative;
+  width: 960px;
+  height: 152px;
+  background: var(--primary-green);
+  border-radius: 35px;
+  margin: 28px 0 0 19px;
+  padding: 20px;
+}
+
+.title-text {
+  font-weight: 700;
+  font-size: 35px;
+  color: #FFFFFF;
+  margin-left: 400px;
+}
+
+.date-time {
+  position: absolute;
+  right: 30px;
+  top: 20px;
+  color: #FFFFFF;
+  opacity: 0.64;
+  font-size: 20px;
+}
+
+.content-box {
+  position: absolute;
+  width: 661px;
+  height: 608px;
+  top: 277px;
+  left: 12px;
+  background: var(--light-beige);
+  border-radius: 35px;
+  padding: 40px;
+}
+
+.body-text {
+  font-size: 24px;
+  line-height: 29px;
+  color: #1E1E1E;
+}
+
+/* Navbar Direita */
+.right-navbar {
+  position: absolute;
+  width: 450px;
+  height: 1041px;
+  right: 0;
+  background: var(--primary-brown);
+  padding: 20px;
+}
+
+.new-post-title {
+  font-size: 40px;
+  color: #FFFFFF;
+  margin-left: 20px;
+}
+
+.post-section {
+  width: 421px;
+  height: 78px;
+  background: var(--secondary-brown);
+  border-radius: 35px;
+  margin: 20px 0;
+  padding: 20px;
+}
+
+.post-input {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 24px;
+  width: 100%;
+}
+
+.post-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.book-card {
+  width: 211.84px;
+  height: 300px;
+  background: var(--dark-gray);
+  border-radius: 21px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.book-title {
+  font-weight: 700;
+  font-size: 24px;
+  color: #1E1E1E;
+}
+
+.book-author {
+  font-weight: 300;
+  font-size: 24px;
+  color: #1E1E1E;
+}
+
+.publish-button {
+  position: absolute;
+  bottom: 50px;
+  right: 50px;
+  background: var(--secondary-brown);
+  border: 3px solid #A35636;
+  border-radius: 30px;
+  color: white;
+  padding: 15px 30px;
+  font-size: 24px;
+  cursor: pointer;
+}
