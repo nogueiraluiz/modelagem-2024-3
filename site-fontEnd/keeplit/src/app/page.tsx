@@ -1,6 +1,6 @@
 import Criaposts from "@/components/ui/criapost";
 import Sidebar from "@/components/ui/sidebar";
-import Image from "next/image";
+
 
 export default function Home() {
   return (
@@ -8,6 +8,7 @@ export default function Home() {
       <Sidebar caminhoimagem="/logo.svg" nomeusuario="lele" />
       <div className="grow m-0 p-0"></div>
       <Criaposts />
+    
     </main>
 
   );
