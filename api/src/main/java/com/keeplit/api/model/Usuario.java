@@ -40,7 +40,7 @@ public class Usuario {
     private String email;
 
     @NotBlank
-    @Column(name = "senhaimagem", nullable = false)
+    @Column(name = "senha", nullable = false)
     private String senha;
 
     @Lob
