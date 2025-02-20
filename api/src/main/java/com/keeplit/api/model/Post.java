@@ -1,13 +1,17 @@
 package com.keeplit.api.model;
 
 import java.util.Date;
+import java.util.List;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -43,8 +47,18 @@ public class Post {
     @JoinColumn(name = "id_autor", nullable = false)
     private Usuario autor;
 
+    @NotBlank
+    @Column(name = "livro", nullable = false)
+    private String livro;
+
+    @ElementCollection
+    @CollectionTable(name = "post_autores", joinColumns = @JoinColumn(name = "id_post"))
+    @Column(name = "autores_livro", nullable = false)
+    private List<String> autoresDoLivro;
+
+    @Lob
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "id_livro", nullable = false)
-    private Livro livro;
+    @Column(name = "imagem", nullable = false, columnDefinition = "BYTEA")
+    private byte[] imagem;
+
 }

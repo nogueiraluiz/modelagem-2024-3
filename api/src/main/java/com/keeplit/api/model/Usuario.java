@@ -10,9 +10,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -41,13 +40,13 @@ public class Usuario {
     private String email;
 
     @NotBlank
-    @Column(name = "senha", nullable = false)
+    @Column(name = "senhaimagem", nullable = false)
     private String senha;
 
+    @Lob
     @NotNull
-    @OneToOne
-    @JoinColumn(name = "id_foto_perfil", nullable = false)
-    private Imagem fotoPerfil;
+    @Column(name = "foto_perfil", nullable = false, columnDefinition = "BYTEA")
+    private byte[] fotoPerfil;
 
     @PastOrPresent
     @Column(name = "data_criacao_conta", nullable = false)
