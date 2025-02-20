@@ -1,0 +1,50 @@
+package com.keeplit.api.model;
+
+import java.util.Date;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@Entity
+@Table(name = "posts")
+public class Post {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @NotBlank
+    @Column(name = "titulo", nullable = false)
+    private String titulo;
+
+    @NotBlank
+    @Column(name = "texto", nullable = false, columnDefinition = "TEXT")
+    private String texto;
+
+    @PastOrPresent
+    @Column(name = "data_criacao", nullable = false)
+    private Date dataCriacao;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "id_autor", nullable = false)
+    private Usuario autor;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "id_livro", nullable = false)
+    private Livro livro;
+}
