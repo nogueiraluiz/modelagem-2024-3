@@ -8,15 +8,6 @@
   --accent-yellow: #E2AC59;
   --dark-gray: #6D6D6D;
   --light-beige: #EAC690;
-}
-
-/* Layout Principal */
-.macbook-screen {
-  position: relative;
-  width: 1728px;
-  height: 1041px;
-  background: #FFFFFF;
-  display: flex;
   font-family: 'Inter', sans-serif;
 }
 
@@ -25,74 +16,209 @@
   display: flex;
   width: 100%;
   height: 100vh;
+  overflow: hidden; /* Adicionado para evitar rolagem */
 }
 
 /* Navbar Esquerda */
 .left-navbar {
   position: absolute;
-  width: 280px;
-  height: 1041px;
+  width: 15%; /* Ajustado para 15% */
+  height: 100vh; /* Limitar a altura à altura da tela */
   background: var(--primary-green);
-  padding: 20px;
+  padding: 18px; /* Reduzido em 10% */
 }
 
 .logo {
   font-family: 'Poppins', sans-serif;
-  font-size: 40px;
+  font-size: 27px; /* Reduzido em 10% */
   color: white;
-  margin: 20px 0 50px 25px;
+  margin: 18px 0 27px 22.5px; /* Reduzido em 10% */
 }
 
 .user-profile {
   position: absolute;
   top: 150px;
   left: 30px;
+  margin-top: 90px; /* Reduzido em 10% */
+  margin-left: 27px; /* Reduzido em 10% */
 }
 
 .user-avatar {
-  width: 100px;
-  height: 100px;
+  width: 72px; /* Reduzido em 10% */
+  height: 72px; /* Reduzido em 10% */
   border-radius: 50%;
   background: var(--dark-gray);
-  margin-bottom: 20px;
+  margin-bottom: 18px; /* Reduzido em 10% */
 }
 
 .logout-button {
   position: absolute;
-  bottom: 50px;
-  left: 30px;
+  bottom: 27px; /* Reduzido em 10% */
+  left: 27px; /* Reduzido em 10% */
   color: white;
   cursor: pointer;
 }
 
 .logout-icon {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
+  width: 18px; /* Reduzido em 10% */
+  height: 18px; /* Reduzido em 10% */
+  margin-right: 9px; /* Reduzido em 10% */
 }
 
 /* Conteúdo Central */
 .main-container {
   position: absolute;
-  left: 280px;
-  width: 960px;
+  left: 15%; /* Ajustado para refletir a nova largura da navbar esquerda */
+  width: 55%; /* Ajustado para refletir a nova largura da navbar esquerda */
+  height: 100vh; /* Limitar a altura à altura da tela */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .main-header {
   position: relative;
-  width: 960px;
-  height: 152px;
+  width: 95%;
+  height: 108px; /* Reduzido em 10% */
   background: var(--primary-green);
-  border-radius: 35px;
-  margin: 28px 0 0 19px;
-  padding: 20px;
+  border-radius: 31.5px; /* Reduzido em 10% */
+  margin: 18px auto 0; /* Reduzido em 10% */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 36px; /* Reduzido em 10% */
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header-left .user-avatar {
+  width: 36px; /* Reduzido em 10% */
+  height: 36px; /* Reduzido em 10% */
+  border-radius: 50%;
+  background: var(--dark-gray);
+  margin-bottom: 9px; /* Reduzido em 10% */
+}
+
+.header-left .user-name {
+  font-size: 16.2px; /* Reduzido em 10% */
+  font-weight: 500;
+  color: #FFFFFF;
+}
+
+.header-center {
+  text-align: center;
+}
+
+.header-center .title-text {
+  font-weight: 700;
+  font-size: 25.2px; /* Reduzido em 10% */
+  color: #FFFFFF;
+}
+
+.header-center .star-rating {
+  position: relative;
+  display: inline-block;
+  font-size: 21.6px; /* Reduzido em 10% */
+  width: 108px; /* Reduzido em 10% */
+  height: 21.6px; /* Reduzido em 10% */
+}
+
+.stars-background,
+.stars-foreground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+}
+
+.stars-background {
+  color: #ccc; /* Cor de fundo cinza */
+}
+
+.stars-foreground {
+  overflow: hidden;
+  color: #FFD700; /* Cor das estrelas preenchidas */
+  width: 150px; /* Largura da barra de carregamento igual à das estrelas */
+  height: 100%; /* Altura da barra de carregamento igual à das estrelas */
+}
+
+.star {
+  cursor: pointer;
+  transition: color 0.2s, transform 0.2s;
+  position: relative;
+  z-index: 1;
+}
+
+.star:hover {
+  transform: scale(1.2);
+}
+
+.star.filled {
+  color: #FFD700;
+  z-index: 2;
+}
+
+.star.half-filled::before {
+  content: '★';
+  color: #FFD700;
+  position: absolute;
+  left: 0;
+  width: 50%;
+  overflow: hidden;
+}
+
+.star-container {
+  position: relative;
+  display: inline-block;
+}
+
+.star-container .star:first-child {
+  position: absolute;
+  left: 0;
+  width: 50%;
+  overflow: hidden;
+}
+
+.header-right {
+  text-align: right;
+  color: #FFFFFF;
+}
+
+.header-right .post-date,
+.header-right .post-time {
+  font-size: 12.6px; /* Reduzido em 10% */
+  opacity: 0.64;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  color: #FFFFFF;
+}
+
+.user-info .user-name {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.user-info .post-date {
+  font-size: 16px;
+  opacity: 0.64;
+}
+
+.user-info .post-time {
+  font-size: 16px;
+  opacity: 0.64;
 }
 
 .title-text {
   font-weight: 700;
   font-size: 35px;
   color: #FFFFFF;
-  margin-left: 400px;
 }
 
 .date-time {
@@ -104,90 +230,333 @@
   font-size: 20px;
 }
 
+.content-wrapper {
+  display: flex;
+  gap: 20px;
+}
+
 .content-box {
-  position: absolute;
-  width: 661px;
-  height: 608px;
-  top: 277px;
-  left: 12px;
+  width: 540px; /* Reduzido em 10% */
+  height: 450px; /* Reduzido em 10% */
   background: var(--light-beige);
-  border-radius: 35px;
-  padding: 40px;
+  border-radius: 31.5px; /* Reduzido em 10% */
+  padding: 27px; /* Reduzido em 10% */
 }
 
 .body-text {
-  font-size: 24px;
-  line-height: 29px;
+  font-size: 18px; /* Reduzido em 10% */
+  line-height: 22.5px; /* Reduzido em 10% */
   color: #1E1E1E;
+}
+
+.book-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 300px;
+}
+
+.book-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2E2E2E;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.book-author {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-style: italic;
+  color: #6D6D6D;
+  margin: 0;
+}
+
+.divider {
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 8px 0;
+}
+
+.feed-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #AD684A;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+/* Efeitos opcionais para interatividade */
+.feed-title:hover {
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+/* Rectangle 3 */
+.rectangle-3 {
+  width: calc(211.84px * 0.75); /* Diminuído em 25% */
+  height: calc(300px * 0.75); /* Diminuído em 25% */
+  background: #6D6D6D;
+  border-radius: calc(21px * 0.75); /* Diminuído em 25% */
+  margin-bottom: 20px; /* Adicionado para espaçamento */
+}
+
+/* Título do Livro */
+.book-title {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-size: calc(24px * 0.75); /* Diminuído em 25% */
+  line-height: calc(29px * 0.75); /* Diminuído em 25% */
+  color: #1E1E1E;
+  margin: 20px 0 10px 0; /* Ajustar margens conforme necessário */
+}
+
+/* Autor */
+.book-author {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-size: calc(24px * 0.75); /* Diminuído em 25% */
+  line-height: calc(29px * 0.75); /* Diminuído em 25% */
+  color: #1E1E1E;
+  margin: 0 0 10px 0; /* Ajustar margens conforme necessário */
+}
+
+/* Rectangle 16 */
+.rectangle-16 {
+  width: calc(150px * 0.75); /* Diminuído em 25% */
+  height: calc(50px * 0.75); /* Diminuído em 25% */
+  background: #709A7C;
+  border-radius: calc(35px * 0.75); /* Diminuído em 25% */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 calc(10px * 0.75); /* Diminuído em 25% */
+  box-sizing: border-box;
+  margin-top: 20px; /* Adicionado para espaçamento */
+}
+
+/* Feed */
+.feed-title {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: calc(18px * 0.75); /* Diminuído em 25% */
+  line-height: calc(22px * 0.75); /* Diminuído em 25% */
+  color: #FFFFFF;
+}
+
+/* Ellipse 4 */
+.ellipse-4 {
+  width: calc(50px * 0.75); /* Diminuído em 25% */
+  height: calc(50px * 0.75); /* Diminuído em 25% */
+  background: #D9D9D9;
+  border-radius: 50%;
 }
 
 /* Navbar Direita */
 .right-navbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #b3755d;
+  min-height: 100vh;
+  padding: 24px; /* Ajustado para 1.5rem */
   position: absolute;
-  width: 450px;
-  height: 1041px;
-  right: 0;
-  background: var(--primary-brown);
-  padding: 20px;
+  right: 0; /* Adicionado para alinhar à direita */
+  width: 30%; /* Ajustado para 35% */
+}
+
+/* Novo Post */
+.new-post-title {
+  font-size: 24px; /* Ajustado para 1.5rem */
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 16px; /* Ajustado para 1rem */
+  text-align: center; /* Centralizar o texto */
+}
+
+/* Campo de título */
+.post-input {
+  width: 100%;
+  max-width: 320px; /* Ajustado para 20rem */
+  padding: 12px; /* Ajustado para 0.75rem */
+  background: #93593f;
+  color: #FFFFFF;
+  border-radius: 8px; /* Ajustado para 0.5rem */
+  margin-bottom: 16px; /* Ajustado para 1rem */
+  outline: none;
+  text-align: center; /* Centralizar o texto */
+}
+
+/* Seção de mídia e informações */
+.rectangle-7 {
+  width: 100%;
+  max-width: 320px; /* Ajustado para 20rem */
+  background: #a35e41;
+  padding: 16px; /* Ajustado para 1rem */
+  border-radius: 8px; /* Ajustado para 0.5rem */
+  display: flex;
+  align-items: center;
+  gap: 16px; /* Ajustado para 1rem */
+  margin-bottom: 16px; /* Ajustado para 1rem */
+}
+
+.rectangle-10 {
+  width: 80px; /* Ajustado para 5rem */
+  height: 96px; /* Ajustado para 6rem */
+  background: #6D6D6D;
+  border-radius: 8px; /* Ajustado para 0.5rem */
+}
+
+.rectangle-11,
+.rectangle-12 {
+  width: 100%;
+  background: #e1a24b;
+  padding: 8px; /* Ajustado para 0.5rem */
+  border-radius: 8px; /* Ajustado para 0.5rem */
+  color: #FFFFFF;
+  text-align: center;
+}
+
+.rectangle-11 {
+  margin-bottom: 8px; /* Ajustado para 0.5rem */
+}
+
+.flex {
+  display: flex;
+  gap: 4px; /* Ajustado para 0.25rem */
+}
+
+/* Campo de texto */
+.write-text {
+  width: 100%;
+  max-width: 320px; /* Ajustado para 20rem */
+  height: 128px; /* Ajustado para 8rem */
+  padding: 12px; /* Ajustado para 0.75rem */
+  background: #93593f;
+  color: #FFFFFF;
+  border-radius: 8px; /* Ajustado para 0.5rem */
+  margin-bottom: 16px; /* Ajustado para 1rem */
+  outline: none;
+  text-align: center; /* Centralizar o texto */
+}
+
+/* Botão Publicar */
+.publish-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 320px; /* Ajustado para 20rem */
+  background: #a35e41;
+  color: #FFFFFF;
+  padding: 12px 24px; /* Ajustado para 0.75rem 1.5rem */
+  border-radius: 8px; /* Ajustado para 0.5rem */
+  font-weight: 600;
+  text-align: center; /* Centralizar o texto */
 }
 
 .new-post-title {
-  font-size: 40px;
+  font-size: 27px; /* Reduzido em 10% */
   color: #FFFFFF;
-  margin-left: 20px;
+  margin-left: 18px; /* Reduzido em 10% */
 }
 
 .post-section {
-  width: 421px;
-  height: 78px;
+  width: 100%; /* Ajustado para ocupar 100% da largura disponível */
+  max-width: 421px; /* Definido um máximo para a largura */
+  height: 54px; /* Reduzido em 10% */
   background: var(--secondary-brown);
-  border-radius: 35px;
-  margin: 20px 0;
-  padding: 20px;
+  border-radius: 31.5px; /* Reduzido em 10% */
+  margin: 18px 0; /* Reduzido em 10% */
+  padding: 18px; /* Reduzido em 10% */
+  display: flex; /* Adicionado para alinhar o input */
+  align-items: center; /* Alinhar verticalmente o input */
+  box-sizing: border-box; /* Incluir padding e borda no tamanho total */
 }
 
 .post-input {
   background: transparent;
   border: none;
   color: white;
-  font-size: 24px;
+  font-size: 18px; /* Reduzido em 10% */
   width: 100%;
+  outline: none; /* Remover outline */
+  padding: 0; /* Remover padding */
+  box-sizing: border-box; /* Incluir padding e borda no tamanho total */
 }
 
-.post-input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.book-card {
-  width: 211.84px;
-  height: 300px;
-  background: var(--dark-gray);
-  border-radius: 21px;
+/* Estilos para a seção de detalhes do livro */
+.book-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   padding: 20px;
-  margin: 20px 0;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 300px;
 }
 
 .book-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
   font-weight: 700;
-  font-size: 24px;
-  color: #1E1E1E;
+  color: #2E2E2E;
+  margin: 0;
+  line-height: 1.2;
 }
 
 .book-author {
-  font-weight: 300;
-  font-size: 24px;
-  color: #1E1E1E;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-style: italic;
+  color: #6D6D6D;
+  margin: 0;
+}
+
+.divider {
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 8px 0;
+}
+
+.feed-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #AD684A;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+/* Efeitos opcionais para interatividade */
+.feed-title:hover {
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
 }
 
 .publish-button {
   position: absolute;
-  bottom: 50px;
-  right: 50px;
+  bottom: 27px; /* Reduzido em 10% */
+  right: 27px; /* Reduzido em 10% */
   background: var(--secondary-brown);
-  border: 3px solid #A35636;
-  border-radius: 30px;
+  border: 2.7px solid #A35636; /* Reduzido em 10% */
+  border-radius: 27px; /* Reduzido em 10% */
   color: white;
-  padding: 15px 30px;
-  font-size: 24px;
+  padding: 9px 18px; /* Reduzido em 10% */
+  font-size: 18px; /* Reduzido em 10% */
   cursor: pointer;
 }
