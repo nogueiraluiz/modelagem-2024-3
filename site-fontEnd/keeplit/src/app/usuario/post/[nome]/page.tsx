@@ -3,120 +3,204 @@
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import './style.css';
+import { FaSignOutAlt, FaPaperPlane } from 'react-icons/fa';
+
+type StarRatingProps = {
+  rating: number;
+  onRate: (rate: number) => void;
+};
+
+const StarRating = ({ rating, onRate }: StarRatingProps) => {
+  const [hoverRating, setHoverRating] = useState(0);
+
+  return (
+    <div 
+      className="star-rating" 
+      role="radiogroup" 
+      aria-label="Avaliação em estrelas"
+    >
+      {[1, 2, 3, 4, 5].map((star) => (
+        <button
+          key={star}
+          type="button"
+          className={`star ${star <= (hoverRating || rating) ? 'filled' : ''}`}
+          onClick={() => onRate(star)}
+          onMouseEnter={() => setHoverRating(star)}
+          onMouseLeave={() => setHoverRating(0)}
+          aria-label={`Avaliar com ${star} estrelas`}
+          aria-checked={star === rating}
+          role="radio"
+        >
+          ★
+        </button>
+      ))}
+    </div>
+  );
+};
+
+const UserProfile = ({ name }: { name: string }) => (
+  <div className="user-profile">
+    <div 
+      className="user-avatar"
+      role="img" 
+      aria-label={`Avatar de ${name}`}
+    >
+      {name[0]?.toUpperCase()}
+    </div>
+    <h2 aria-label="Nome do usuário">{name}</h2>
+  </div>
+);
 
 export default function Home() {
   const params = useParams();
-  const { nome } = params;
   const [rating, setRating] = useState(0);
-  const [hover, setHover] = useState(0);
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [postData, setPostData] = useState({
+    title: '',
+    content: ''
+  });
 
-  const handleRating = (rate: number) => {
-    setRating(rate);
+  // Corrigindo o acesso ao parâmetro da rota
+  const nome = params.nome?.toString() || 'Usuário';
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Adicionar lógica de envio aqui
+    console.log({ ...postData, rating });
+    setPostData({ title: '', content: '' });
+    setRating(0);
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setPostData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
   };
 
   return (
     <div className="main-background">
       {/* Navbar Esquerda */}
-      <div className="left-navbar">
-        <div className="logo">KeepLit</div>
-        <div className="user-profile">
-          <div className="user-avatar"></div>
-          <h2>{nome}</h2>
-        </div>
-        <div className="logout-button">
-          <img src="./images/icon.png" alt="Logout Icon" className="logout-icon" />
+      <nav className="left-navbar" aria-label="Menu lateral esquerdo">
+        <div className="logo" role="heading" aria-level={1}>KeepLit</div>
+        <UserProfile name={nome} />
+        <button 
+          className="logout-button"
+          aria-label="Sair da conta"
+          onClick={() => console.log('Logout')}
+        >
+          <FaSignOutAlt aria-hidden="true" />
           Logout
-        </div>
-      </div>
+        </button>
+      </nav>
 
       {/* Conteúdo Principal */}
-      <div className="main-container">
-        <div className="main-header">
+      <main className="main-container">
+        <header className="main-header">
           <div className="header-left">
-            <div className="user-avatar"></div>
-            <div className="user-name">{nome}</div>
+            <UserProfile name={nome?.toString() || 'Usuário'} />
           </div>
+          
           <div className="header-center">
-            <h1 className="title-text">Título</h1>
-            <div className="star-rating">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <span
-                  key={star}
-                  className={`star ${star <= (hover || rating) ? 'filled' : ''} ${star - 0.5 === (hover || rating) ? 'half-filled' : ''}`}
-                  onClick={() => handleRating(star)}
-                  onMouseEnter={() => setHover(star)}
-                  onMouseLeave={() => setHover(rating)}
-                >
-                  ★
-                </span>
-              ))}
-            </div>
+            <h1 className="title-text" aria-label="Título da resenha">Título</h1>
+            <StarRating rating={rating} onRate={setRating} />
           </div>
-          <div className="header-right">
-            <div className="post-date">08/01/2025</div>
-            <div className="post-time">14:00</div>
-          </div>
-        </div>
 
-        <div className="content-wrapper">
-          <div className="content-box">
+          <div className="header-right">
+            <time 
+              dateTime="2025-01-08T14:00" 
+              aria-label="Data e hora da postagem"
+            >
+              <div className="post-date">08/01/2025</div>
+              <div className="post-time">14:00</div>
+            </time>
+          </div>
+        </header>
+
+        <section className="content-wrapper" aria-labelledby="conteudo-principal">
+          <h2 id="conteudo-principal" className="sr-only">Conteúdo Principal</h2>
+          
+          <article className="content-box">
             <p className="body-text">
               Entra no mundo brutal, mágico e envolvente de uma escola de elite para cavaleiros de dragões...
             </p>
-          </div>
+          </article>
 
-          <div className="book-section">
-            <div className="rectangle-3"></div>
+          <aside className="book-section" aria-label="Informações do livro">
+            <div className="rectangle-3" role="img" aria-label="Capa do livro"></div>
             <h2 className="book-title">Título do Livro</h2>
             <p className="book-author">Autor</p>
             <div className="rectangle-16">
               <h3 className="feed-title">FEED</h3>
-              <div className="ellipse-4"></div>
+              <div className="ellipse-4" aria-hidden="true"></div>
             </div>
-          </div>
-        </div>
-      </div>
+          </aside>
+        </section>
+      </main>
 
       {/* Navbar Direita */}
-      <div className="right-navbar flex flex-col items-center bg-[#b3755d] min-h-screen p-6">
-        <h1 className="new-post-title text-white text-xl font-semibold mb-4">Novo Post</h1>
+      <aside className="right-navbar flex flex-col items-center bg-[#b3755d] min-h-screen p-6">
+        <h2 className="new-post-title text-white text-xl font-semibold mb-4">
+          Novo Post
+        </h2>
 
-        {/* Campo de título */}
-        <input
-          type="text"
-          placeholder="Título do seu post"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="post-input w-full max-w-md p-3 bg-[#93593f] text-white rounded-lg mb-4 outline-none"
-        />
+        <form onSubmit={handleSubmit} className="w-full max-w-md">
+          <input
+            type="text"
+            name="title"
+            placeholder="Título do seu post"
+            value={postData.title}
+            onChange={handleInputChange}
+            className="post-input w-full p-3 bg-[#93593f] text-white rounded-lg mb-4 outline-none"
+            aria-required="true"
+            required
+          />
 
-        {/* Seção de mídia e informações */}
-        <div className="rectangle-7 w-full max-w-md bg-[#a35e41] p-4 rounded-lg flex items-center gap-4 mb-4">
-          <div className="rectangle-10 w-20 h-24 bg-gray-500 rounded-md"></div>
-          <div className="flex flex-col gap-2 flex-1">
-            <button className="rectangle-11 w-full bg-[#e1a24b] py-2 rounded-lg text-white">Opção 1</button>
-            <button className="rectangle-12 w-full bg-[#e1a24b] py-2 rounded-lg text-white">Opção 2</button>
-            <div className="flex gap-1">
-              {/* Adicionar conteúdo aqui, se necessário */}
+          <div 
+            className="rectangle-7 w-full bg-[#a35e41] p-4 rounded-lg flex items-center gap-4 mb-4"
+            role="group"
+            aria-label="Opções de mídia"
+          >
+            <div className="rectangle-10 w-20 h-24 bg-gray-500 rounded-md" 
+                 role="img" 
+                 aria-label="Pré-visualização da mídia">
+            </div>
+            <div className="flex flex-col gap-2 flex-1">
+              <button 
+                type="button"
+                className="rectangle-11 w-full bg-[#e1a24b] py-2 rounded-lg text-white"
+              >
+                Opção 1
+              </button>
+              <button 
+                type="button"
+                className="rectangle-12 w-full bg-[#e1a24b] py-2 rounded-lg text-white"
+              >
+                Opção 2
+              </button>
             </div>
           </div>
-        </div>
 
-        {/* Campo de texto */}
-        <textarea
-          placeholder="Escreva..."
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className="write-text w-full max-w-md h-32 p-3 bg-[#93593f] text-white rounded-lg mb-4 outline-none"
-        ></textarea>
+          <textarea
+            name="content"
+            placeholder="Escreva..."
+            value={postData.content}
+            onChange={handleInputChange}
+            className="write-text w-full h-32 p-3 bg-[#93593f] text-white rounded-lg mb-4 outline-none"
+            aria-required="true"
+            required
+          />
 
-        {/* Botão Publicar */}
-        <button className="publish-button flex items-center justify-between w-full max-w-md bg-[#a35e41] text-white py-3 px-6 rounded-lg font-semibold">
-          Publicar
-        </button>
-      </div>
+          <button 
+            type="submit" 
+            className="publish-button flex items-center justify-between w-full bg-[#a35e41] text-white py-3 px-6 rounded-lg font-semibold"
+          >
+            <FaPaperPlane aria-hidden="true" />
+            Publicar
+          </button>
+        </form>
+      </aside>
     </div>
   );
 }
