@@ -44,8 +44,8 @@ public class Post {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "id_autor", nullable = false)
-    private Usuario autor;
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private Usuario usuario;
 
     @NotBlank
     @Column(name = "livro", nullable = false)
@@ -53,8 +53,8 @@ public class Post {
 
     @ElementCollection
     @CollectionTable(name = "post_autores", joinColumns = @JoinColumn(name = "id_post"))
-    @Column(name = "autores_livro", nullable = false)
-    private List<String> autoresDoLivro;
+    @Column(name = "autor_livro", nullable = false, columnDefinition = "VARCHAR(255) DEFAULT ''")
+    private List<String> autoresLivro;
 
     @Lob
     @NotNull
