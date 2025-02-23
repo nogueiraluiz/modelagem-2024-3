@@ -47,7 +47,7 @@ const UserProfile = ({ name }: { name: string }) => (
 
 export default function Home() {
   const params = useParams();
-  const [rating, setRating] = useState(3);
+  const [rating, setRating] = useState(3); //seta as estrelas como 3
 
   const [postData, setPostData] = useState({
     title: '',
