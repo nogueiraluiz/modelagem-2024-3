@@ -8,7 +8,7 @@ interface SidebarProps {
 
 export default function Sidebar({ nomeusuario, caminhoimagem }: SidebarProps) {
     return (
-        <aside className="h-screen max-w-[300px] bg-verde text-white flex flex-col justify-between">
+        <aside className="sidebar h-screen max-w-[300px] bg-verde text-white flex flex-col justify-between">
             <div>
                 <div className="flex flex-row items-center flex-nowrap justify-around p-4">
                     <Image src="/logo.svg" width={100} height={100} alt="KeepLit" />

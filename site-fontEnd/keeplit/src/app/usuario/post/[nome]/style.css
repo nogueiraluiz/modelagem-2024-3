@@ -336,3 +336,78 @@
   bottom: 27px;
   right: 27px;
 }
+
+@media (max-width: 768px) {
+  .main-background {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .main-container, .sidebar {
+    display: none !important;
+  }
+
+  .criaposts {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .main-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .header-left, .header-right, .content-wrapper, .book-section, .sidebar {
+    display: none !important;
+  }
+
+  .header-center {
+    margin-bottom: 1rem;
+  }
+
+  .content-box {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .star-rating {
+    justify-content: center;
+  }
+
+  .new-post-title {
+    font-size: 1.5rem;
+  }
+
+  .post-input {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .rectangle-7 {
+    width: 100%;
+    height: auto;
+    padding: 1rem;
+  }
+
+  .rectangle-10 {
+    width: 100%;
+    height: auto;
+  }
+
+  .rectangle-11, .rectangle-12 {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .write-text {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .publish-button {
+    width: 100%;
+    font-size: 1rem;
+  }
+}
