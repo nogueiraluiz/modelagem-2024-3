@@ -8,12 +8,9 @@ import Criaposts from '@/components/ui/criapost';
 
 type StarRatingProps = {
   rating: number;
-  onRate: (rate: number) => void;
 };
 
-const StarRating = ({ rating, onRate }: StarRatingProps) => {
-  const [hoverRating, setHoverRating] = useState(0);
-
+const StarRating = ({ rating }: StarRatingProps) => {
   return (
     <div
       className="star-rating"
@@ -21,19 +18,15 @@ const StarRating = ({ rating, onRate }: StarRatingProps) => {
       aria-label="Avaliação em estrelas"
     >
       {[1, 2, 3, 4, 5].map((star) => (
-        <button
+        <span
           key={star}
-          type="button"
-          className={`star ${star <= (hoverRating || rating) ? 'filled' : ''}`}
-          onClick={() => onRate(star)}
-          onMouseEnter={() => setHoverRating(star)}
-          onMouseLeave={() => setHoverRating(0)}
-          aria-label={`Avaliar com ${star} estrelas`}
+          className={`star ${star <= rating ? 'filled' : ''}`}
+          aria-label={`Avaliado com ${star} estrelas`}
           aria-checked={star === rating}
           role="radio"
         >
           ★
-        </button>
+        </span>
       ))}
     </div>
   );
@@ -54,13 +47,14 @@ const UserProfile = ({ name }: { name: string }) => (
 
 export default function Home() {
   const params = useParams();
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(3);
+
   const [postData, setPostData] = useState({
     title: '',
     content: ''
   });
 
-  // Corrigindo o acesso ao parâmetro da rota
+
   const nome = params.nome?.toString() || 'Usuário';
 
   return (
@@ -77,7 +71,7 @@ export default function Home() {
 
           <div className="header-center">
             <h1 className="title-text" aria-label="Título da resenha">Título</h1>
-            <StarRating rating={rating} onRate={setRating} />
+            <StarRating rating={rating} />
           </div>
 
           <div className="header-right">
