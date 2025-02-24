@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <main className="flex flex-row flex-nowrap justify-start items-start bg-[#F8EEE3]">
       <Sidebar caminhoimagem="/logo.svg" nomeusuario="lele" />
-      <div className="flex flex-col grow gap-4 p-4 h-screen overflow-y-scroll">
+      <div className="flex flex-col grow gap-4 p-4 h-screen overflow-y-scroll pb-24 xl:pb-4">
         <div className="border-2 rounded-3xl border-black  flex flex-row flex-nowrap items-center gap-2 p-2">
           <FiSearch color="black" className="w-8 h-8" />
           <input type="text" placeholder="Pesquisar" className=" bg-[#F8EEE3] text-black w-full p-2   rounded-2xl focus:outline-none text-2xl" />
@@ -24,6 +24,5 @@ export default function Home() {
       </div>
       <Criaposts />
     </main>
-
   );
 }
