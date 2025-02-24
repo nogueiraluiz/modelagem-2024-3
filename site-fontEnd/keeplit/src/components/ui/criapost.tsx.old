@@ -1,7 +1,7 @@
 'use client';
 import Image from "next/image";
 import Title from "../text/title";
-import React, { useState, useRef, ChangeEvent, useEffect, useCallback } from "react";
+import React, { useState, useRef, ChangeEvent, useEffect } from "react";
 import { BsFileImage } from "react-icons/bs";
 import { MdOutlineClose } from "react-icons/md";
 import { Rating } from 'react-simple-star-rating';
@@ -25,15 +25,17 @@ const OriginalForm = React.memo(({
     imagePreview,
     handleRemoveImage,
     handleFileChange,
-    fileInputRef
+    fileInputRef,
+    rating
 }: {
     formData: FormState;
-    handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    handleInputChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     handleSubmit: (e: React.FormEvent) => void;
     imagePreview: string | null;
     handleRemoveImage: () => void;
     handleFileChange: (e: ChangeEvent<HTMLInputElement>) => void;
     fileInputRef: React.RefObject<HTMLInputElement>;
+    rating: number;
 }) => (
     <form className="xl:flex h-full bg-bgmarrom text-white flex-col items-center justify-between p-4"
         onSubmit={handleSubmit}
@@ -67,7 +69,6 @@ const OriginalForm = React.memo(({
                             width={110}
                             height={180}
                             className="max-w[110px] max-h-[180px] rounded-2xl"
-                            priority
                         />
                     ) : (
                         <div className="flex flex-col items-center justify-center gap-2 h-full w-full">
@@ -113,7 +114,7 @@ const OriginalForm = React.memo(({
                                 value: rate.toString()
                             }
                         } as any)}
-                        initialValue={formData.rating}
+                        initialValue={rating}
                         size={30}
                         allowFraction={false}
                         fillColor='#E2AC59'
@@ -121,7 +122,7 @@ const OriginalForm = React.memo(({
                         SVGclassName="inline-block"
                         className="rating-stars"
                     />
-                    <input type="hidden" name="nota" value={formData.rating} required />
+                    <input type="hidden" name="nota" value={rating} required />
                 </div>
             </div>
         </div>
@@ -136,39 +137,10 @@ const OriginalForm = React.memo(({
         <input
             type="submit"
             value="Criar Post"
-            className="w-full p-2 my-2 bg-marrom text-white rounded-2xl min-h-14 focus:outline-none text-2xl cursor-pointer hover:bg-[#4D4D4D] transition-colors"
+            className="w-full p-2 my-2 bg-marrom text-white rounded-2xl min-h-14 focus:outline-none text-2xl cursor-pointer"
         />
     </form>
 ));
-
-const Modal = React.memo(({ children, onClose }: { children: React.ReactNode, onClose: () => void }) => {
-    const [portalElement, setPortalElement] = useState<HTMLElement | null>(null);
-
-    useEffect(() => {
-        const element = document.createElement('div');
-        document.body.appendChild(element);
-        setPortalElement(element);
-        return () => { document.body.removeChild(element) };
-    }, []);
-
-    return portalElement ? ReactDOM.createPortal(
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]"
-            onClick={onClose}>
-            <div className="bg-bgmarrom rounded-2xl p-4 w-full max-w-lg mx-4 relative h-[90vh]"
-                onClick={(e) => e.stopPropagation()}>
-                <button
-                    onClick={onClose}
-                    className="absolute top-4 right-4 text-white text-2xl hover:text-red-500">
-                    ×
-                </button>
-                <div className="overflow-y-auto h-full p-2">
-                    {children}
-                </div>
-            </div>
-        </div>,
-        portalElement
-    ) : null;
-});
 
 export default function Criaposts() {
     const [formData, setFormData] = useState<FormState>({
@@ -178,22 +150,20 @@ export default function Criaposts() {
         descricao: '',
         rating: 0
     });
-
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [showModal, setShowModal] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const checkMobile = useCallback(() => setIsMobile(window.innerWidth < 1280), []);
-
     useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 1280);
         checkMobile();
         window.addEventListener('resize', checkMobile);
         return () => window.removeEventListener('resize', checkMobile);
-    }, [checkMobile]);
+    }, []);
 
-    const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
@@ -201,21 +171,21 @@ export default function Criaposts() {
                 name === 'autor-livro' ? 'autor' :
                     name]: name === 'rating' ? Number(value) : value
         }));
-    }, []);
+    };
 
-    const handleFileChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             setSelectedFile(file);
             setImagePreview(URL.createObjectURL(file));
         }
-    }, []);
+    };
 
-    const handleRemoveImage = useCallback(() => {
+    const handleRemoveImage = () => {
         setImagePreview(null);
         setSelectedFile(null);
         if (fileInputRef.current) fileInputRef.current.value = '';
-    }, []);
+    };
 
     useEffect(() => {
         return () => {
@@ -223,7 +193,36 @@ export default function Criaposts() {
         };
     }, [imagePreview]);
 
-    const handleSubmit = useCallback(async (e: React.FormEvent) => {
+    const Modal = ({ children }: { children: React.ReactNode }) => {
+        const [portalElement, setPortalElement] = useState<HTMLElement | null>(null);
+
+        useEffect(() => {
+            const element = document.createElement('div');
+            document.body.appendChild(element);
+            setPortalElement(element);
+            return () => { document.body.removeChild(element) };
+        }, []);
+
+        return portalElement ? ReactDOM.createPortal(
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]"
+                onClick={() => setShowModal(false)}>
+                <div className="bg-bgmarrom rounded-2xl p-4 w-full max-w-lg mx-4 relative h-[90vh]"
+                    onClick={(e) => e.stopPropagation()}>
+                    <button
+                        onClick={() => setShowModal(false)}
+                        className="absolute top-4 right-4 text-white text-2xl hover:text-red-500">
+                        ×
+                    </button>
+                    <div className="overflow-y-auto h-full p-2">
+                        {children}
+                    </div>
+                </div>
+            </div>,
+            portalElement
+        ) : null;
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const form = e.currentTarget as HTMLFormElement;
         const submissionData = new FormData(form);
@@ -245,7 +244,7 @@ export default function Criaposts() {
         } catch (error) {
             console.error('Erro no envio:', error);
         }
-    }, [selectedFile, handleRemoveImage]);
+    };
 
     return (
         <div>
@@ -258,13 +257,14 @@ export default function Criaposts() {
                     handleRemoveImage={handleRemoveImage}
                     handleFileChange={handleFileChange}
                     fileInputRef={fileInputRef}
+                    rating={formData.rating}
                 />
             </aside>
 
             {isMobile && (
                 <>
                     {showModal && (
-                        <Modal onClose={() => setShowModal(false)}>
+                        <Modal>
                             <OriginalForm
                                 formData={formData}
                                 handleInputChange={handleInputChange}
@@ -273,6 +273,7 @@ export default function Criaposts() {
                                 handleRemoveImage={handleRemoveImage}
                                 handleFileChange={handleFileChange}
                                 fileInputRef={fileInputRef}
+                                rating={formData.rating}
                             />
                         </Modal>
                     )}

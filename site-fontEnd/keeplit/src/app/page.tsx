@@ -8,7 +8,7 @@ import { FiSearch } from "react-icons/fi";
 
 export default function Home() {
   return (
-    <main className="flex flex-row flex-nowrap justify-start items-start bg-[#F8EEE3]">
+    <main className="flex flex-row flex-nowrap justify-start items-start bg-[#F8EEE3] poppins">
       <Sidebar caminhoimagem="/logo.svg" nomeusuario="lele" />
       <div className="flex flex-col grow gap-4 p-4 h-screen overflow-y-scroll pb-24 xl:pb-4">
         <div className="border-2 rounded-3xl border-black  flex flex-row flex-nowrap items-center gap-2 p-2">
