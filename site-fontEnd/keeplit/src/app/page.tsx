@@ -1,15 +1,17 @@
 import Criaposts from "@/components/ui/criapost";
 import Postcard from "@/components/ui/postcard";
 import Sidebar from "@/components/ui/sidebar";
-import { get } from "http";
-import Image from "next/image";
+//import { get } from "http";
+//import Image from "next/image";
 import { FiSearch } from "react-icons/fi";
+import { setupAPIClient } from './services/api';
+//const axios = require('axios');
 
-const axios = require('axios');
-
+const axios = setupAPIClient();
 async function getPosts() {
+  
   try {
-    const response = await axios.get('http://localhost:8080/posts');
+    const response = await axios.get('/posts');
     return (response.data);
   } catch (error) {
     console.error(error);
@@ -17,7 +19,7 @@ async function getPosts() {
 }
 async function getUsers() {
   try {
-    const response = await axios.get('http://localhost:8080/usuarios');
+    const response = await axios.get('/usuarios');
     return (response.data);
   } catch (error) {
     console.error(error);
@@ -25,8 +27,8 @@ async function getUsers() {
 }
 
 export default async function Home() {
-  let posts = await getPosts();
-  let users = await getUsers();
+  const posts = await getPosts();
+  const users = await getUsers();
   console.log(users);
   console.log(posts);
 
