@@ -46,6 +46,7 @@ export default async function Home() {
 
       </div>
       <Criaposts />
+
     </main>
   );
 }
