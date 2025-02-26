@@ -30,7 +30,7 @@ export default function Postcard({ nomeusuario, perfil, capa, titulo, titulolivr
                 <div>
                     <h1 className="text-xl">{titulo}</h1>
                     <p className="break-words line-clamp-3 overflow-hidden text-ellipsis">
-                        {descricao.length > 150 ? `${descricao.slice(0, 150)}...` : descricao}
+                        {descricao}
                     </p>
                 </div>
             </div>

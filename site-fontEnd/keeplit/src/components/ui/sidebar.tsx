@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Title from "../text/title";
+import { FaArrowAltCircleLeft } from "react-icons/fa";
 
 interface SidebarProps {
     nomeusuario: string;
@@ -22,8 +23,8 @@ export default function Sidebar({ nomeusuario, caminhoimagem }: SidebarProps) {
                 </div>
             </div>
             <div className="mb-10 flex flex-row flex-nowrap justify-start items-center p-8 gap-3">
-                <Image src="/logo.svg" width={55} height={55} alt={"logout"} />
-                <p className="text-xl">Logout</p>
+                <FaArrowAltCircleLeft className="w-11 h-11" />
+                <p className="text-2xl">Logout</p>
             </div>
         </aside>
     )
