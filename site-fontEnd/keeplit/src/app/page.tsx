@@ -15,14 +15,25 @@ async function getPosts() {
     console.error(error);
   }
 }
+async function getUsers() {
+  try {
+    const response = await axios.get('http://localhost:8080/usuarios');
+    return (response.data);
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 export default async function Home() {
   let posts = await getPosts();
+  let users = await getUsers();
+  console.log(users);
   console.log(posts);
 
   return (
     <main className="flex flex-row flex-nowrap justify-start items-start bg-[#F8EEE3] poppins">
-      <Sidebar caminhoimagem="/logo.svg" nomeusuario="lulu" />
+
+      <Sidebar caminhoimagem={"data:image/png;base64," + users[3].fotoPerfil} nomeusuario={users[3].nomeUsuario} />
       <div className="flex flex-col grow gap-4 p-4 h-screen overflow-y-scroll pb-24 xl:pb-4">
         <div className="border-2 rounded-3xl border-black  flex flex-row flex-nowrap items-center gap-2 p-2">
           <FiSearch color="black" className="w-8 h-8" />
