@@ -13,7 +13,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -59,9 +58,8 @@ public class Post {
     @Column(name = "autor_livro", nullable = false, columnDefinition = "VARCHAR(255) DEFAULT ''")
     private List<String> autoresLivro;
 
-    @Lob
     @NotNull
-    @Column(name = "imagem", nullable = false, columnDefinition = "BYTEA")
-    private byte[] imagem;
+    @Column(name = "imagem", nullable = false, columnDefinition = "TEXT")
+    private String imagem;
 
 }

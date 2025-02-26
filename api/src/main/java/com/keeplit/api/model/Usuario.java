@@ -12,7 +12,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -45,10 +44,9 @@ public class Usuario {
     @Column(name = "senha", nullable = false)
     private String senha;
 
-    @Lob
     @NotNull
-    @Column(name = "foto_perfil", nullable = false, columnDefinition = "BYTEA")
-    private byte[] fotoPerfil;
+    @Column(name = "foto_perfil", nullable = false, columnDefinition = "TEXT")
+    private String fotoPerfil;
 
     @PastOrPresent
     @Column(name = "data_criacao_conta", nullable = false)

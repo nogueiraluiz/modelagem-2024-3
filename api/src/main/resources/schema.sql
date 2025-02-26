@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     nome_usuario VARCHAR(100) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL,
-    foto_perfil BLOB NOT NULL,
+    foto_perfil TEXT NOT NULL,
     data_criacao_conta TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS posts (
     data_criacao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     id_usuario BIGINT NOT NULL,
     livro VARCHAR(255) NOT NULL,
-    imagem BLOB NOT NULL,
+    imagem TEXT NOT NULL,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
