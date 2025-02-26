@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.keeplit.api.dto.PostDTO;
 import com.keeplit.api.model.Post;
 import com.keeplit.api.repository.PostRepository;
 
@@ -22,18 +23,19 @@ public class PostController {
     }
 
     @GetMapping
-    public List<Post> listarPosts() {
-        return repository.findAll();
+    public List<PostDTO> listarPosts() {
+        return repository.findAll().stream().map(PostDTO::fromEntity).toList();
     }
 
     @GetMapping("/{id}")
-    public Post buscarPostPorId(@PathVariable Long id) {
-        return repository.findById(id).orElseThrow();
+    public PostDTO buscarPostPorId(@PathVariable Long id) {
+        Post post = repository.findById(id).orElseThrow();
+        return PostDTO.fromEntity(post);
     }
 
     @GetMapping("/search")
-    public List<Post> buscarPosts(@RequestParam String query) {
-        return repository.searchPosts(query);
+    public List<PostDTO> buscarPosts(@RequestParam String query) {
+        return repository.searchPosts(query).stream().map(PostDTO::fromEntity).toList();
     }
 
 }
