@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -17,7 +19,6 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -48,7 +49,7 @@ public class Usuario {
     @Column(name = "foto_perfil", nullable = false, columnDefinition = "TEXT")
     private String fotoPerfil;
 
-    @PastOrPresent
+    @CreationTimestamp
     @Column(name = "data_criacao_conta", nullable = false)
     private Date dataCriacaoConta;
 
