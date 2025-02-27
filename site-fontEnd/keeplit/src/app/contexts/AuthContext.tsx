@@ -1,3 +1,4 @@
+'use client';
 import { createContext, ReactNode, useState, useEffect } from 'react';
 
 import { api } from '../services/apiClient';
@@ -38,24 +39,24 @@ type SignUpProps = {
 
 export const AuthContext = createContext({} as AuthContextData);
 
-export function signOut(){
-    try{
+export function signOut() {
+    try {
         destroyCookie(undefined, '@leblanc.token');
         Router.push('/');
-    }catch{
+    } catch {
         console.log('error logout');
     }
 }
 
-export function AuthProvider({ children }: AuthProviderProps){
+export function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<UserProps>();
-    const isAuthenticated = !!user; 
+    const isAuthenticated = !!user;
 
     useEffect(() => {
         const { '@leblanc.token': token } = parseCookies();
-        if(token){
+        if (token) {
             api.get('userinfo').then(response => {
-                const { id, name, email}  = response.data;
+                const { id, name, email } = response.data;
                 setUser({
                     id,
                     name,
@@ -63,20 +64,20 @@ export function AuthProvider({ children }: AuthProviderProps){
                 });
             }).catch(() => {
                 signOut();
-            }); 
+            });
         }
     }, []);
 
-    async function signIn({ email, password }: SignInProps){
-        try{
+    async function signIn({ email, password }: SignInProps) {
+        try {
             const response = await api.post('/session', {
                 email,
                 password
             })
-            
+
             const { id, name, token } = response.data;
             setCookie(undefined, '@leblanc.token', token, {
-                maxAge: 60*60*24*30,
+                maxAge: 60 * 60 * 24 * 30,
                 path: '/'
             });
 
@@ -92,14 +93,14 @@ export function AuthProvider({ children }: AuthProviderProps){
 
             Router.push('/dashboard');
 
-        }catch(err){
-            toast.error('Login error'); 
+        } catch (err) {
+            toast.error('Login error');
             console.log('error', err);
-        }   
+        }
     }
 
-    async function signUp({ name, email, password }: SignUpProps){
-        try{
+    async function signUp({ name, email, password }: SignUpProps) {
+        try {
             await api.post('/users', {
                 name,
                 email,
@@ -109,14 +110,14 @@ export function AuthProvider({ children }: AuthProviderProps){
             toast.success('Signed up successfully')
 
             Router.push('/');
-        }catch(err){
+        } catch (err) {
             toast.error('error at signup');
             console.log('error at signup', err);
         }
     }
 
 
-    return(
+    return (
         <AuthContext.Provider value={{ user, isAuthenticated, signIn, signOut, signUp }}>
             {children}
         </AuthContext.Provider>

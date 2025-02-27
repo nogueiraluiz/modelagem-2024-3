@@ -1,4 +1,3 @@
-'use client';
 import Criaposts from "@/components/ui/criapost";
 import Postcard from "@/components/ui/postcard";
 import Sidebar from "@/components/ui/sidebar";
@@ -33,7 +32,10 @@ export default async function Home() {
   return (
     <main className="flex flex-row flex-nowrap justify-start items-start bg-[#F8EEE3] poppins">
 
-      <Sidebar caminhoimagem={"data:image/png;base64," + users[3].fotoPerfil} nomeusuario={users[3].nomeUsuario} />
+      <Sidebar
+        caminhoimagem={`data:image/png;base64,${users[3].fotoPerfil.trim()}`}
+        nomeusuario={users[3].nomeUsuario}
+      />
       <div className="flex flex-col grow gap-4 p-4 h-screen overflow-y-scroll pb-24 xl:pb-4">
         <div className="border-2 rounded-3xl border-black  flex flex-row flex-nowrap items-center gap-2 p-2">
           <FiSearch color="black" className="w-8 h-8" />
