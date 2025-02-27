@@ -50,10 +50,10 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<Post> criarPost(
+    public ResponseEntity<PostDTO> criarPost(
             @RequestHeader("Usuario-Id") Long usuarioId,
             @Valid @RequestBody CriarPostDTO postDTO) {
-                
+
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
@@ -67,7 +67,7 @@ public class PostController {
         post.setAutoresLivro(postDTO.autoresLivro());
         Post postSalvo = postRepository.save(post);
 
-        return ResponseEntity.ok(postSalvo);
+        return ResponseEntity.ok(PostDTO.fromEntity(postSalvo));
     }
 
 }
