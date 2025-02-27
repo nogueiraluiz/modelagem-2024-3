@@ -1,42 +1,44 @@
 "use client";
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useContext } from 'react';
 import './styles.css';
-import { setupAPIClient } from '../services/api';
+import { AuthContext } from '../contexts/AuthContext';
+import { toast } from 'react-toastify';
 
 
-const axios = setupAPIClient();
+
 const LoginPage: React.FC = () => {
-  const router = useRouter();
+  const { signIn } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [error, setError] = useState('');
+
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+  //  setLoading(true);
     setError('');
 
-    try {
-      const response = await axios.post('/usuarios/login', {
-        email,
-        password,
-
-      });
-
-      console.log(response.data);
-
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      setError('E-mail ou senha incor');
+   
+    if(email === '' || password === ''){
+      toast.warning('Fill in all fields');
+      return;
     }
-  };
 
-  const handleRegisterClick = () => {
-    router.push('/cadastro');
-  };
+
+    const data = {
+      email,
+      password
+    };
+
+    await signIn(data);
+
+    
+
+  }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
 
   return (
     <div className="login-container">
@@ -81,7 +83,7 @@ const LoginPage: React.FC = () => {
       <div className="button-container">
         <button
           className="register-button"
-          onClick={handleRegisterClick}
+         // onClick={handleRegisterClick}
           disabled={loading}
         >
           Criar nova conta

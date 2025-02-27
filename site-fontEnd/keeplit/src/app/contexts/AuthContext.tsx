@@ -70,7 +70,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     async function signIn({ email, password }: SignInProps) {
         try {
-            const response = await api.post('/session', {
+            const response = await api.post('/usuarios/login', {
                 email,
                 password
             })
@@ -91,7 +91,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
             toast.success('Successful login');
 
-            Router.push('/dashboard');
+            Router.push('/');
 
         } catch (err) {
             toast.error('Login error');
