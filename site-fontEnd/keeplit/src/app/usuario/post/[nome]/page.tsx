@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useParams } from 'next/navigation';
-import { useState } from 'react';
-import './style.css';
-import Sidebar from '@/components/ui/sidebar';
-import Criaposts from '@/components/ui/criapost';
+import { useParams } from "next/navigation";
+import { useState } from "react";
+import "./style.css";
+import Sidebar from "@/components/ui/sidebar";
+import Criaposts from "@/components/ui/criapost";
 
 type StarRatingProps = {
   rating: number;
@@ -20,7 +20,7 @@ const StarRating = ({ rating }: StarRatingProps) => {
       {[1, 2, 3, 4, 5].map((star) => (
         <span
           key={star}
-          className={`star ${star <= rating ? 'filled' : ''}`}
+          className={`star ${star <= rating ? "filled" : ""}`}
           aria-label={`Avaliado com ${star} estrelas`}
           aria-checked={star === rating}
           role="radio"
@@ -46,16 +46,10 @@ const UserProfile = ({ name }: { name: string }) => (
 );
 
 export default function Home() {
-  const params = useParams();
-  const [rating, setRating] = useState(3); //seta as estrelas como 3
+  const params = useParams(); // Pega os parâmetros da rota dinâmica
+  const [rating, setRating] = useState(3); // Define a avaliação inicial como 3 estrelas
 
-  const [postData, setPostData] = useState({
-    title: '',
-    content: ''
-  });
-
-
-  const nome = params.nome?.toString() || 'Usuário';
+  const nome = params.nome?.toString() || "Usuário"; // Obtém o parâmetro 'nome' da URL ou usa 'Usuário' como padrão
 
   return (
     <div className="main-background flex flex-row flex-nowrap justify-start items-start">
@@ -66,7 +60,7 @@ export default function Home() {
       <main className="main-container flex grow">
         <header className="main-header">
           <div className="header-left">
-            <UserProfile name={nome?.toString() || 'Usuário'} />
+            <UserProfile name={nome} />
           </div>
 
           <div className="header-center">
@@ -85,17 +79,27 @@ export default function Home() {
           </div>
         </header>
 
-        <section className="content-wrapper" aria-labelledby="conteudo-principal">
-          <h2 id="conteudo-principal" className="sr-only">Conteúdo Principal</h2>
+        <section
+          className="content-wrapper"
+          aria-labelledby="conteudo-principal"
+        >
+          <h2 id="conteudo-principal" className="sr-only">
+            Conteúdo Principal
+          </h2>
 
           <article className="content-box">
             <p className="body-text">
-              Entra no mundo brutal, mágico e envolvente de uma escola de elite para cavaleiros de dragões...
+              Entra no mundo brutal, mágico e envolvente de uma escola de elite
+              para cavaleiros de dragões...
             </p>
           </article>
 
           <aside className="book-section" aria-label="Informações do livro">
-            <div className="rectangle-3" role="img" aria-label="Capa do livro"></div>
+            <div
+              className="rectangle-3"
+              role="img"
+              aria-label="Capa do livro"
+            ></div>
             <h2 className="book-title">Título do Livro</h2>
             <p className="book-author">Autor</p>
             <div className="rectangle-16">
@@ -106,7 +110,7 @@ export default function Home() {
         </section>
       </main>
 
-      {/* Navbar Direita */}
+      {/* Componente Criaposts */}
       <Criaposts />
     </div>
   );
