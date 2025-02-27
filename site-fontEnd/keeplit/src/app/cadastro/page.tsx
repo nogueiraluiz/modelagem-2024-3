@@ -1,10 +1,24 @@
-import React from 'react';
+"use client";
+
+import React, { useState } from 'react';
 import './styles.css';
 
 const CadastroPage: React.FC = () => {
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="login-container">
-      <div className="image-preview"></div>
       <h1>KeepLit</h1>
       <form className="login-form">
         <div className="form-group">
@@ -18,6 +32,12 @@ const CadastroPage: React.FC = () => {
         </div>
         <div className="form-group">
           <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirmar Senha" required />
+        </div>
+        <div className="form-group image-upload">
+          <input type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
+          {imagePreview && (
+            <div className="image-preview" style={{ backgroundImage: `url(${imagePreview})` }}></div>
+          )}
         </div>
         <button type="submit" className="register-button">Cadastrar</button>
       </form>
