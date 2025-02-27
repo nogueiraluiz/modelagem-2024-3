@@ -9,11 +9,11 @@ export function setupAPIClient(ctx = undefined) {
     const cookies = parseCookies(ctx);
 
     const api = axios.create({
-        baseURL: 'http://localhost:8080',
+        baseURL: 'http://localhost:8080', // Confirme a porta do seu Spring Boot
         headers: {
-            Authorization: `Bearer ${cookies['@leblanc.token']}`
-        },
-    });
+            'Content-Type': 'application/json'
+        }
+    });;
 
     api.interceptors.response.use(response => {
         return response;
