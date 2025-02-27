@@ -3,6 +3,7 @@ import Postcard from "@/components/ui/postcard";
 import Sidebar from "@/components/ui/sidebar";
 import { FiSearch } from "react-icons/fi";
 import { setupAPIClient } from "../services/api";
+import Image from "next/image";
 
 const axios = setupAPIClient();
 async function getPostsUser() {
@@ -30,17 +31,33 @@ export default async function Home() {
     console.log(posts);
 
     return (
-        <main className="flex flex-row flex-nowrap justify-start items-start bg-[#F8EEE3] poppins">
-
-
-            <div className="flex flex-col grow gap-4 p-4 h-screen overflow-y-scroll pb-24 xl:pb-4">
-                <div className="border-2 rounded-3xl border-black  flex flex-row flex-nowrap items-center gap-2 p-2">
-                    <FiSearch color="black" className="w-8 h-8" />
-                    <input type="text" placeholder="Pesquisar" className=" bg-[#F8EEE3] text-black w-full p-2   rounded-2xl focus:outline-none text-2xl" />
+        <main className="w-full">
+            <div className="flex max-w-[100vw] flex-row flex-nowrap justify-start items-start bg-[#F8EEE3] poppins">
+                <div className="bg-verde w-full flex flex-row flex-nowrap justify-between items-center p-6 m-8 rounded-3xl">
+                    <div className="flex flex-row flex-nowrap items-center gap-2">
+                        <Image src={`data:image/png;base64,${users[0].fotoPerfil.trim()}`} alt="foto de perfil" width={200} height={200} />
+                        <h1 className="text-3xl">{users[0].nomeUsuario}</h1>
+                    </div>
+                    <div className="flex flex-row flex-nowrap items-center gap-16">
+                        <div className="text-center text-3xl">
+                            <h1 className="font-black text-7xl">{users[0].posts.length}</h1>
+                            <h1>Publicações</h1>
+                        </div>
+                        <a href="/" className="flex flex-col items-center">
+                            <div className="flex flex-col items-center gap-4 bg-[#EBC895] p-4 rounded-3xl">
+                                <h1 className="text-3xl">Feed</h1>
+                                <Image src="/logo.svg" alt="foto de perfil" width={170} height={170} />
+                            </div>
+                        </a>
+                    </div>
                 </div>
+
+            </div>
+            <div className="p-10 flex flex-col flex-nowrap itens-center gap-4 bg-[#F8EEE3] poppins">
                 {Array.isArray(posts) && posts.map((post) => (
                     <Postcard
                         key={post.id}
+                        id={post.id}
                         nomeusuario={post.nomeusuario}
                         perfil={post.perfil}
                         capa={post.capa}
@@ -50,9 +67,7 @@ export default async function Home() {
                         descricao={post.descricao}
                     />
                 ))}
-
             </div>
-            <Criaposts />
 
         </main>
     );

@@ -44,6 +44,7 @@ export default async function Home() {
         {Array.isArray(posts) && posts.map((post) => (
           <Postcard
             key={post.id}
+            id={post.id}
             nomeusuario={post.nomeusuario}
             perfil={post.perfil}
             capa={post.capa}
