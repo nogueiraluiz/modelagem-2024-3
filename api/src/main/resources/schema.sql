@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS posts (
     data_criacao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     id_usuario BIGINT NOT NULL,
     livro VARCHAR(255) NOT NULL,
+    nota INT NOT NULL CHECK (nota BETWEEN 1 AND 5),
     imagem TEXT NOT NULL,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
 );

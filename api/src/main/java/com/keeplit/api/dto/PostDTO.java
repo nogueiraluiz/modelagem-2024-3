@@ -11,9 +11,10 @@ public record PostDTO(
         String texto,
         Date dataCriacao,
         String livro,
+        Integer nota,
         List<String> autoresLivro,
         String imagem,
-        UsuarioDTO autor) {
+        UsuarioAutorDTO autor) {
 
     public static PostDTO fromEntity(Post post) {
         return new PostDTO(
@@ -22,8 +23,9 @@ public record PostDTO(
                 post.getTexto(),
                 post.getDataCriacao(),
                 post.getLivro(),
+                post.getNota(),
                 post.getAutoresLivro(),
-                post.getImagem() != null ? new String(post.getImagem()) : null, // Convertendo byte[] para String Base64
-                UsuarioDTO.fromEntity(post.getUsuario()));
+                post.getImagem() != null ? post.getImagem() : null,
+                UsuarioAutorDTO.fromEntity(post.getUsuario()));
     }
 }
