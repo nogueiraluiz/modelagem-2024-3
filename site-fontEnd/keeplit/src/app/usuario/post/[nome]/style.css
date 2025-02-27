@@ -57,7 +57,6 @@
 
 /* Conteúdo Central */
 .main-container {
-
   left: 15%;
   width: 60%;
   height: 100vh;
@@ -91,7 +90,7 @@
   height: 36px;
   border-radius: 50%;
   background: var(--dark-gray);
-  margin-bottom: 9px;
+  margin-bottom: 5px;
 }
 
 .header-left .user-name {
@@ -102,19 +101,23 @@
 
 .header-center {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -5%;
 }
 
 .header-center .title-text {
   font-weight: 700;
-  font-size: 2vw;
+  font-size: 20px;
   color: #FFFFFF;
 }
 
 .header-center .star-rating {
   position: relative;
+  text-align: center;
   display: inline-block;
-  font-size: 1vw;
-  width: 10vw;
+  font-size: 20px;
   height: 1vw;
 }
 
@@ -148,7 +151,7 @@
 .content-wrapper {
   display: flex;
   gap: 20px;
-  height: 100%;
+  height: 90%;
   justify-content: space-around;
 }
 
@@ -158,6 +161,7 @@
   background: var(--light-beige);
   border-radius: 31.5px;
   padding: 27px;
+  overflow-y: auto;
 }
 
 .body-text {
@@ -343,7 +347,7 @@
     align-items: center;
   }
 
-  .main-container, .sidebar {
+  .sidebar {
     display: none !important;
   }
 
@@ -353,23 +357,29 @@
   }
 
   .main-header {
-    flex-direction: column;
     align-items: center;
     text-align: center;
     padding: 1rem;
   }
 
-  .header-left, .header-right, .content-wrapper, .book-section, .sidebar {
-    display: none !important;
+  .header-center {
+    
   }
 
-  .header-center {
-    margin-bottom: 1rem;
+  .content-wrapper {
+    flex-direction: column;
+    align-items: center;
   }
 
   .content-box {
     width: 100%;
     margin-bottom: 1rem;
+  }
+
+  .book-section {
+    width: 100%;
+    max-width: 100%;
+    align-items: center;
   }
 
   .star-rating {
@@ -385,6 +395,12 @@
     font-size: 1rem;
   }
 
+  .rectangle-3 {
+    position: relative;
+    width: 120px;
+    height: 70vh;
+    padding: 1rem;
+  }
   .rectangle-7 {
     width: 100%;
     height: auto;
@@ -401,6 +417,12 @@
     font-size: 1rem;
   }
 
+  .rectangle-16{
+    width: 100%;
+    height: 50px;
+    padding: 1rem;
+  }
+
   .write-text {
     width: 100%;
     font-size: 1rem;
@@ -409,5 +431,22 @@
   .publish-button {
     width: 100%;
     font-size: 1rem;
+  }
+
+  .flex-col {
+    flex-direction: column;
+  }
+  .hidden {
+    display: none;
+  }
+  .block {
+    display: block;
+  }
+
+  .main-container {
+    width: 100%;
+    height: 92vh;
+    padding: 0 1rem;
+    overflow-y: auto; /* Permite rolagem vertical */
   }
 }
