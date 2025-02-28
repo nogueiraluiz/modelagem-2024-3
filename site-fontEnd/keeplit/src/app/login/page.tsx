@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import './styles.css';
 import { setupAPIClient } from '../services/api';
+import Cookies from 'js-cookie';
 
 
 const axios = setupAPIClient();
@@ -23,7 +24,7 @@ const LoginPage: React.FC = () => {
         email,
         senha,
       });
-
+      Cookies.set('userid', response.data.id);
       router.push('/');
 
       setLoading(false);
