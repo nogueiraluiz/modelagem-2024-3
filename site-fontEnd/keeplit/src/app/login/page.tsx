@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { setupAPIClient } from '../services/api';
-import Cookies from 'js-cookie';
+
 
 const axios = setupAPIClient();
 const LoginPage: React.FC = () => {

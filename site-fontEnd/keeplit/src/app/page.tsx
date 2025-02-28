@@ -4,7 +4,7 @@ import Postcard from "@/components/ui/postcard";
 import Sidebar from "@/components/ui/sidebar";
 import { FiSearch } from "react-icons/fi";
 import { setupAPIClient } from './services/api';
-import { useEffect } from 'react';
+
 
 const axios = setupAPIClient();
 
