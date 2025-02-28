@@ -9,7 +9,7 @@ const axios = setupAPIClient();
 const LoginPage: React.FC = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [senha, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -21,14 +21,14 @@ const LoginPage: React.FC = () => {
     try {
       const response = await axios.post('/usuarios/login', {
         email,
-        password,
-
+        senha,
       });
 
-      console.log(response.data);
+      router.push('/');
 
       setLoading(false);
     } catch (error) {
+      console.log(error);
       setLoading(false);
       setError('E-mail ou senha incor');
     }
@@ -59,7 +59,7 @@ const LoginPage: React.FC = () => {
           <input
             type="password"
             id="password"
-            value={password}
+            value={senha}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Senha"
             required
