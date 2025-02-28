@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Title from "../text/title";
@@ -16,26 +16,25 @@ interface User {
 export default function Sidebar() {
     const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
-    const api = setupAPIClient();
+    const api = useMemo(() => setupAPIClient(), []);
 
-    const getCookie = (name: string) => {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop()?.split(';').shift();
+    const getCookie = (name: string): string | undefined => {
+        if (typeof window === "undefined") return;
+        return document.cookie
+            .split('; ')
+            .find(row => row.startsWith(`${name}=`))
+            ?.split('=')[1];
     };
 
     const handleLogout = () => {
-        // Remove o cookie
         document.cookie = 'userid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-
-        // Limpa o estado do usuário
         setUser(null);
-
-        // Redireciona para a tela de login
         router.push('/login');
     };
 
     useEffect(() => {
+        let isMounted = true;
+
         const fetchUserData = async () => {
             try {
                 const userId = getCookie('userid');
@@ -45,14 +44,15 @@ export default function Sidebar() {
                 }
 
                 const response = await api.get<User>(`/usuarios/${userId}`);
-                setUser(response.data);
+                if (isMounted) setUser(response.data);
             } catch (error) {
                 console.error('Erro ao buscar usuário:', error);
-                router.push('/login');
+                if (isMounted) router.push('/login');
             }
         };
 
         fetchUserData();
+        return () => { isMounted = false };
     }, [router, api]);
 
     if (!user) {
@@ -87,8 +87,8 @@ export default function Sidebar() {
                         <div className="flex flex-row flex-nowrap justify-center items-center p-4 gap-3">
                             <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white">
                                 <Image
-                                    src={(user.fotoPerfil?.trim() || '/logo.svg')}
-                                    className=" object-cover"
+                                    src={user.fotoPerfil?.trim() || '/logo.svg'}
+                                    className="object-cover"
                                     width={75}
                                     height={75}
                                     alt={user.nomeUsuario}
