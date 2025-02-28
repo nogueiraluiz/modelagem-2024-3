@@ -1,6 +1,8 @@
 'use client';
 import React, { useState, useCallback } from 'react';
 import axios from 'axios';
+import { redirect } from 'next/navigation';
+import router from 'next/router';
 
 type FormState = {
   nomeUsuario: string;
@@ -79,7 +81,8 @@ const CadastroPage: React.FC = () => {
       });
       setImagePreview(null);
 
-      console.log('Usuário cadastrado com sucesso:', response.data);
+      alert('Usuário cadastrado com sucesso:');
+      router.push('/login');
 
     } catch (error) {
       console.error('Erro no cadastro:', error);

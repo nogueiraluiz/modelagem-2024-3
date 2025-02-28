@@ -1,3 +1,4 @@
+// app/page.tsx
 import Criaposts from "@/components/ui/criapost";
 import Postcard from "@/components/ui/postcard";
 import Sidebar from "@/components/ui/sidebar";
@@ -5,37 +6,68 @@ import { FiSearch } from "react-icons/fi";
 import { setupAPIClient } from './services/api';
 import { cookies } from "next/headers";
 
+// Definir tipos para os dados da API
+interface Autor {
+  id: number;
+  nomeUsuario: string;
+  fotoPerfil: string | null;
+}
+
+interface Post {
+  id: number;
+  titulo: string;
+  texto: string;
+  livro: string;
+  nota: number;
+  imagem: string | null;
+  autor: Autor;
+}
+
 const axios = setupAPIClient();
 
-async function getPosts() {
+async function getPosts(): Promise<Post[]> {
   try {
-    const response = await axios.get('/posts');
-    return response.data;
+    const response = await axios.get<Post[]>('/posts');
+    return response.data.map((post: Post) => ({
+      ...post,
+      imagem: post.imagem?.trim() || null,
+      autor: {
+        ...post.autor,
+        fotoPerfil: post.autor.fotoPerfil?.trim() || null
+      }
+    }));
   } catch (error) {
-    console.error(error);
+    console.error('Erro ao buscar posts:', error);
     return [];
   }
 }
 
-async function getUsers() {
+async function getUsers(): Promise<Autor | null> {
   try {
-    const response = await axios.get('/usuarios/' + (await cookies()).get('userid')?.value);
-    return response.data;
+    const cookieStore = await cookies();
+    const userId = cookieStore.get('userid')?.value;
+
+    if (!userId) return null;
+
+    const response = await axios.get<Autor>(`/usuarios/${userId}`);
+    return {
+      ...response.data,
+      fotoPerfil: response.data.fotoPerfil?.trim() || null
+    };
   } catch (error) {
-    console.error(error);
-    return [];
+    console.error('Erro ao buscar usuário:', error);
+    return null;
   }
 }
 
 export default async function Home() {
-  const posts = await getPosts();
-  const users = await getUsers();
+  const [posts, user] = await Promise.all([getPosts(), getUsers()]);
 
   return (
     <main className="flex flex-row flex-nowrap justify-start items-start bg-[#F8EEE3] poppins">
       <Sidebar
-        caminhoimagem={users?.fotoPerfil?.trim() || ''}
-        nomeusuario={users?.nomeUsuario || ''}
+        caminhoimagem={user?.fotoPerfil || ''}
+        nomeusuario={user?.nomeUsuario || ''}
       />
 
       <div className="flex flex-col grow gap-4 p-4 h-screen overflow-y-scroll pb-24 xl:pb-4">
@@ -48,17 +80,16 @@ export default async function Home() {
           />
         </div>
 
-        {Array.isArray(posts) && posts.map((post) => (
+        {Array.isArray(posts) && posts.map((post: Post) => (
           <Postcard
             key={post.id}
             id={post.id}
-            nomeusuario={post.nomeusuario}
-            perfil={post?.perfil?.trim() || ''}
-            capa={post.imagem?.trim() || ''}
             titulo={post.titulo}
-            titulolivro={post.titulolivro}
-            rating={post.rating}
-            descricao={post.descricao}
+            texto={post.texto}
+            livro={post.livro}
+            nota={post.nota}
+            imagem={post.imagem}
+            autor={post.autor}
           />
         ))}
       </div>

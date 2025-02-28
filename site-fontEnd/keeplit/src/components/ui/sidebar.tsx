@@ -17,7 +17,7 @@ export default function Sidebar({ nomeusuario, caminhoimagem }: SidebarProps) {
                 </div>
                 <div className="flex flex-row flex-nowrap justify-start p-4">
                     <div className="flex flex-row flex-nowrap justify-center items-center p-4 gap-3">
-                        <Image src={caminhoimagem} width={55} height={55} alt={nomeusuario} />
+                        <Image src={caminhoimagem} className="rounded-full" width={55} height={55} alt={nomeusuario} />
                         <p className="text-2xl">{nomeusuario}</p>
                     </div>
                 </div>
