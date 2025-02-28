@@ -9,13 +9,15 @@ import { FaUserAlt, FaHome } from "react-icons/fa";
 import { RiLogoutBoxFill } from "react-icons/ri";
 import { FaCirclePlus } from "react-icons/fa6";
 import ReactDOM from 'react-dom';
+import axios from 'axios';
 
 type FormState = {
     titulo: string;
     livro: string;
     autor: string;
-    descricao: string;
-    rating: number;
+    texto: string;
+    nota: number;
+    imagem?: string;
 };
 
 const OriginalForm = React.memo(({
@@ -25,7 +27,9 @@ const OriginalForm = React.memo(({
     imagePreview,
     handleRemoveImage,
     handleFileChange,
-    fileInputRef
+    fileInputRef,
+    loading,
+    errorMessage
 }: {
     formData: FormState;
     handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
@@ -34,10 +38,11 @@ const OriginalForm = React.memo(({
     handleRemoveImage: () => void;
     handleFileChange: (e: ChangeEvent<HTMLInputElement>) => void;
     fileInputRef: React.RefObject<HTMLInputElement>;
+    loading: boolean;
+    errorMessage: string;
 }) => (
     <form className="xl:flex h-full bg-bgmarrom text-white flex-col items-center justify-between p-4"
-        onSubmit={handleSubmit}
-        method="post">
+        onSubmit={handleSubmit}>
 
         <Title title="Novo Post" />
 
@@ -109,11 +114,11 @@ const OriginalForm = React.memo(({
                     <Rating
                         onClick={(rate: number) => handleInputChange({
                             target: {
-                                name: 'rating',
+                                name: 'nota',
                                 value: rate.toString()
                             }
                         } as any)}
-                        initialValue={formData.rating}
+                        initialValue={formData.nota}
                         size={30}
                         allowFraction={false}
                         fillColor='#E2AC59'
@@ -121,22 +126,25 @@ const OriginalForm = React.memo(({
                         SVGclassName="inline-block"
                         className="rating-stars"
                     />
-                    <input type="hidden" name="nota" value={formData.rating} required />
                 </div>
             </div>
         </div>
         <textarea
-            name="descricao"
-            value={formData.descricao}
+            name="texto"
+            value={formData.texto}
             onChange={handleInputChange}
             placeholder="Escreva sua resenha"
             className="w-full grow p-2 my-2 bg-marrom placeholder:text-white rounded-2xl min-h-[200px] focus:outline-none text-2xl"
             required
         />
+        {errorMessage && (
+            <div className="text-red-500 text-sm mb-2">{errorMessage}</div>
+        )}
         <input
             type="submit"
-            value="Criar Post"
-            className="w-full p-2 my-2 bg-marrom text-white rounded-2xl min-h-14 focus:outline-none text-2xl cursor-pointer hover:bg-[#4D4D4D] transition-colors"
+            value={loading ? "Enviando..." : "Criar Post"}
+            disabled={loading}
+            className="w-full p-2 my-2 bg-marrom text-white rounded-2xl min-h-14 focus:outline-none text-2xl cursor-pointer hover:bg-[#4D4D4D] transition-colors disabled:opacity-50"
         />
     </form>
 ));
@@ -175,14 +183,15 @@ export default function Criaposts() {
         titulo: '',
         livro: '',
         autor: '',
-        descricao: '',
-        rating: 0
+        texto: '',
+        nota: 0
     });
 
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [showModal, setShowModal] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const checkMobile = useCallback(() => setIsMobile(window.innerWidth < 1280), []);
@@ -199,53 +208,81 @@ export default function Criaposts() {
             ...prev,
             [name === 'nome-livro' ? 'livro' :
                 name === 'autor-livro' ? 'autor' :
-                    name]: name === 'rating' ? Number(value) : value
+                    name]: name === 'nota' ? Number(value) : value
         }));
     }, []);
 
     const handleFileChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            setSelectedFile(file);
-            setImagePreview(URL.createObjectURL(file));
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
         }
     }, []);
 
     const handleRemoveImage = useCallback(() => {
         setImagePreview(null);
-        setSelectedFile(null);
         if (fileInputRef.current) fileInputRef.current.value = '';
     }, []);
 
-    useEffect(() => {
-        return () => {
-            if (imagePreview) URL.revokeObjectURL(imagePreview);
-        };
-    }, [imagePreview]);
+    const getCookie = (name: string): string | undefined => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop()?.split(';').shift();
+    };
 
     const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
-        const form = e.currentTarget as HTMLFormElement;
-        const submissionData = new FormData(form);
-
-        if (selectedFile) {
-            submissionData.set('capa', selectedFile, selectedFile.name);
-        }
+        setLoading(true);
+        setErrorMessage('');
 
         try {
-            const response = await fetch('https://eoje0c7ntv4t3if.m.pipedream.net', {
-                method: 'POST',
-                body: submissionData
+            const userId = getCookie('userid');
+
+            const jsonData = {
+                titulo: formData.titulo,
+                texto: formData.texto,
+                nota: formData.nota,
+                autoresLivro: [formData.autor],
+                livro: formData.livro,
+                imagem: imagePreview
+            };
+
+            const response = await axios.post('/api/posts', jsonData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Usuario-Id': userId || ''
+                }
             });
 
-            if (response.ok) {
-                setFormData({ titulo: '', livro: '', autor: '', descricao: '', rating: 0 });
-                handleRemoveImage();
-            }
+            setFormData({
+                titulo: '',
+                livro: '',
+                autor: '',
+                texto: '',
+                nota: 0
+            });
+            setImagePreview(null);
+            if (fileInputRef.current) fileInputRef.current.value = '';
+
+            if (isMobile) setShowModal(false);
+
+            console.log('Post criado com sucesso:', response.data);
+
         } catch (error) {
-            console.error('Erro no envio:', error);
+            console.error('Erro ao criar post:', error);
+            if (axios.isAxiosError(error)) {
+                setErrorMessage(error.response?.data?.message || 'Erro ao criar post. Tente novamente.');
+            } else {
+                setErrorMessage('Erro inesperado ao criar post.');
+            }
+        } finally {
+            setLoading(false);
         }
-    }, [selectedFile, handleRemoveImage]);
+    }, [formData, imagePreview, isMobile]);
 
     return (
         <div>
@@ -258,6 +295,8 @@ export default function Criaposts() {
                     handleRemoveImage={handleRemoveImage}
                     handleFileChange={handleFileChange}
                     fileInputRef={fileInputRef}
+                    loading={loading}
+                    errorMessage={errorMessage}
                 />
             </aside>
 
@@ -273,6 +312,8 @@ export default function Criaposts() {
                                 handleRemoveImage={handleRemoveImage}
                                 handleFileChange={handleFileChange}
                                 fileInputRef={fileInputRef}
+                                loading={loading}
+                                errorMessage={errorMessage}
                             />
                         </Modal>
                     )}
