@@ -84,13 +84,15 @@ export default function Sidebar() {
                 </div>
                 <div className="flex flex-row flex-nowrap justify-start p-4">
                     <div className="flex flex-row flex-nowrap justify-center items-center p-4 gap-3">
-                        <Image
-                            src={user.fotoPerfil || '/default-avatar.png'}
-                            className="rounded-full object-cover"
-                            width={55}
-                            height={55}
-                            alt={user.nomeUsuario}
-                        />
+                        <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white">
+                            <Image
+                                src={user.fotoPerfil || '/default-avatar.png'}
+                                className=" object-cover"
+                                width={75}
+                                height={75}
+                                alt={user.nomeUsuario}
+                            />
+                        </div>
                         <p className="text-2xl truncate max-w-[150px]">
                             {user.nomeUsuario}
                         </p>
