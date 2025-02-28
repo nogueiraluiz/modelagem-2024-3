@@ -66,8 +66,6 @@ export default async function Home() {
   return (
     <main className="flex flex-row flex-nowrap justify-start items-start bg-[#F8EEE3] poppins">
       <Sidebar
-        caminhoimagem={user?.fotoPerfil || ''}
-        nomeusuario={user?.nomeUsuario || ''}
       />
 
       <div className="flex flex-col grow gap-4 p-4 h-screen overflow-y-scroll pb-24 xl:pb-4">
