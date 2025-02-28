@@ -1,26 +1,50 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState } from "react";
-import "./style.css";
+import { useState, useEffect } from "react";
 import Sidebar from "@/components/ui/sidebar";
 import Criaposts from "@/components/ui/criapost";
+import { setupAPIClient } from "@/app/services/api";
 
-type StarRatingProps = {
+interface Autor {
+  id: number;
+  nomeUsuario: string;
+  email: string;
+  fotoPerfil: string;
+}
+
+interface Post {
+  id: number;
+  titulo: string;
+  texto: string;
+  dataCriacao: string;
+  livro: string;
+  nota: number;
+  autoresLivro: string[];
+  imagem: string;
+  autor: Autor;
+}
+
+interface UsuarioLogadoResponse {
+  id: number;
+  nomeUsuario: string;
+  email: string;
+  fotoPerfil: string;
+  posts: Post[];
+}
+
+interface StarRatingProps {
   rating: number;
-};
+}
 
 const StarRating = ({ rating }: StarRatingProps) => {
   return (
-    <div
-      className="star-rating"
-      role="radiogroup"
-      aria-label="Avaliação em estrelas"
-    >
+    <div className="flex gap-1" role="radiogroup" aria-label="Avaliação em estrelas">
       {[1, 2, 3, 4, 5].map((star) => (
         <span
           key={star}
-          className={`star ${star <= rating ? "filled" : ""}`}
+          className={`text-2xl transition-transform duration-200 ${star <= rating ? "text-yellow-400" : "text-gray-300"
+            }`}
           aria-label={`Avaliado com ${star} estrelas`}
           aria-checked={star === rating}
           role="radio"
@@ -32,85 +56,118 @@ const StarRating = ({ rating }: StarRatingProps) => {
   );
 };
 
-const UserProfile = ({ name }: { name: string }) => (
-  <div className="user-profile">
+const axios = setupAPIClient();
+
+interface UserProfileProps {
+  name: string;
+}
+
+const UserProfile = ({ name }: UserProfileProps) => (
+  <div className="flex flex-col items-center gap-4">
     <div
-      className="user-avatar"
+      className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-600 text-2xl font-bold text-white"
       role="img"
       aria-label={`Avatar de ${name}`}
     >
       {name[0]?.toUpperCase()}
     </div>
-    <h2 aria-label="Nome do usuário">{name}</h2>
+    <h2 className="text-lg font-medium text-white" aria-label="Nome do usuário">
+      {name}
+    </h2>
   </div>
 );
 
-export default function Home() {
-  const params = useParams(); // Pega os parâmetros da rota dinâmica
-  const [rating, setRating] = useState(3); // Define a avaliação inicial como 3 estrelas
+interface PageParams {
+  [key: string]: string | string[] | undefined;
+  nome?: string | string[];
+}
 
-  const nome = params.nome?.toString() || "Usuário"; // Obtém o parâmetro 'nome' da URL ou usa 'Usuário' como padrão
+export default function Home() {
+  const params = useParams<PageParams>();
+  const [rating, setRating] = useState<number>(3);
+  const [post, setPost] = useState<Post | null>(null);
+  const [usuarioLogado, setUsuarioLogado] = useState<UsuarioLogadoResponse | null>(null);
+
+  const nome = Array.isArray(params.nome) ? params.nome[0] : params.nome || "Usuário";
+
+  async function getPosts(): Promise<void> {
+    try {
+      const response = await axios.get<Post>(`/posts/${nome}`);
+      setPost(response.data);
+      setRating(response.data.nota);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function getUsuarioLogado(): Promise<void> {
+    try {
+      const userId = document.cookie.split('=')[1];
+      const response = await axios.get<UsuarioLogadoResponse>(`/usuarios/${userId}`);
+      setUsuarioLogado(response.data);
+    } catch (error) {
+      console.error('Erro ao buscar usuário:', error);
+    }
+  }
+
+  useEffect(() => {
+    getPosts();
+    getUsuarioLogado();
+  }, [nome]);
+
+  if (!post) {
+    return <div className="flex h-screen bg-white items-center justify-center text-2xl">Carregando...</div>;
+  }
+
+  const postDate = new Date(post.dataCriacao);
+  const formattedDate = postDate.toLocaleDateString('pt-BR');
+  const formattedTime = postDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
   return (
-    <div className="main-background flex flex-row flex-nowrap justify-start items-start">
-      {/* Navbar Esquerda */}
-      <Sidebar caminhoimagem="/logo.svg" nomeusuario={nome} />
+    <div className="flex h-screen bg-white">
+      <Sidebar
+        caminhoimagem="/logo.svg"
+        nomeusuario={usuarioLogado?.nomeUsuario || "Usuário"}
+      />
 
-      {/* Conteúdo Principal */}
-      <main className="main-container flex grow">
-        <header className="main-header">
-          <div className="header-left">
-            <UserProfile name={nome} />
+      <main className="flex flex-1 flex-col gap-4 p-4">
+        <header className="mx-auto flex w-[95%] items-center justify-between rounded-[31.5px] bg-[#709A7C] px-9 py-4">
+          <div className="flex flex-col items-center">
+            <UserProfile name={post.autor.nomeUsuario} />
           </div>
 
-          <div className="header-center">
-            <h1 className="title-text" aria-label="Título da resenha">Título</h1>
+          <div className="-mt-5 flex flex-col items-center gap-2">
+            <h1 className="text-xl font-bold text-white" aria-label="Título da resenha">
+              {post.titulo}
+            </h1>
             <StarRating rating={rating} />
           </div>
 
-          <div className="header-right">
-            <time
-              dateTime="2025-01-08T14:00"
-              aria-label="Data e hora da postagem"
-            >
-              <div className="post-date">08/01/2025</div>
-              <div className="post-time">14:00</div>
-            </time>
+          <div className="text-right text-white">
+            <div className="text-xs opacity-60">{formattedDate}</div>
+            <div className="text-xs opacity-60">{formattedTime}</div>
           </div>
         </header>
 
-        <section
-          className="content-wrapper"
-          aria-labelledby="conteudo-principal"
-        >
-          <h2 id="conteudo-principal" className="sr-only">
-            Conteúdo Principal
-          </h2>
-
-          <article className="content-box">
-            <p className="body-text">
-              Entra no mundo brutal, mágico e envolvente de uma escola de elite
-              para cavaleiros de dragões...
+        <section className="flex h-full gap-5">
+          <article className="h-[45%] w-[54%] flex-1 overflow-y-auto rounded-[31.5px] bg-[#EAC690] p-6">
+            <p className="text-lg leading-relaxed text-[#1E1E1E]">
+              {post.texto}
             </p>
           </article>
 
-          <aside className="book-section" aria-label="Informações do livro">
-            <div
-              className="rectangle-3"
-              role="img"
-              aria-label="Capa do livro"
-            ></div>
-            <h2 className="book-title">Título do Livro</h2>
-            <p className="book-author">Autor</p>
-            <div className="rectangle-16">
-              <h3 className="feed-title">FEED</h3>
-              <div className="ellipse-4" aria-hidden="true"></div>
+          <aside className="flex max-h-[350px] max-w-[300px] flex-col gap-3 p-5" aria-label="Informações do livro">
+            <div className="h-[50%] w-[80%] rounded bg-gray-600" role="img" aria-label="Capa do livro" />
+            <h2 className="text-center text-xl font-bold text-[#2E2E2E]">{post.livro}</h2>
+            <p className="text-center italic text-[#6D6D6D]">{post.autoresLivro.join(', ')}</p>
+            <div className="mt-5 flex h-[20%] w-full items-center justify-between rounded-[26.25px] bg-[#709A7C] px-2">
+              <h3 className="pl-2 font-poppins text-sm font-semibold uppercase tracking-wide text-white">FEED</h3>
+              <div className="h-9 w-9 rounded-full bg-gray-300" />
             </div>
           </aside>
         </section>
       </main>
 
-      {/* Componente Criaposts */}
       <Criaposts />
     </div>
   );

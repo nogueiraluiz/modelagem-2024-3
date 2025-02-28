@@ -1,74 +1,145 @@
-import Criaposts from "@/components/ui/criapost";
 import Postcard from "@/components/ui/postcard";
-import Sidebar from "@/components/ui/sidebar";
-import { FiSearch } from "react-icons/fi";
-import { setupAPIClient } from "../services/api";
 import Image from "next/image";
+import { setupAPIClient } from "@/app/services/api";
+import { cookies } from 'next/headers';
+
+// Interfaces TypeScript
+interface User {
+    id: number;
+    nomeUsuario: string;
+    fotoPerfil: string;
+    posts: Post[];
+}
+
+interface Post {
+    id: number;
+    nomeusuario: string;
+    perfil: string;
+    capa: string;
+    titulo: string;
+    titulolivro: string;
+    rating: number;
+    descricao: string;
+}
 
 const axios = setupAPIClient();
-async function getPostsUser() {
 
+async function getPostsUser(): Promise<Post[]> {
     try {
-        const response = await axios.get('/posts');
-        return (response.data);
+        const response = await axios.get<Post[]>('/posts');
+        return response.data.map(post => ({
+            ...post,
+            id: Number(post.id)
+        }));
     } catch (error) {
-        console.error(error);
-    }
-}
-async function getUsers() {
-    try {
-        const response = await axios.get('/usuarios');
-        return (response.data);
-    } catch (error) {
-        console.error(error);
+        console.error('Erro ao buscar posts:', error);
+        return [];
     }
 }
 
-export default async function Home() {
-    const posts = await getPostsUser();
-    const users = await getUsers();
-    console.log(users);
-    console.log(posts);
+async function getUsers(): Promise<User | null> {
+    try {
+        const cookieStore = await cookies();
+        const userId = cookieStore.get('userid')?.value;
+
+        if (!userId) {
+            console.error('ID do usuário não encontrado nos cookies');
+            return null;
+        }
+
+        const response = await axios.get<User>(`/usuarios/${Number(userId)}`);
+        return {
+            ...response.data,
+            id: Number(response.data.id),
+            posts: response.data.posts.map(post => ({
+                ...post,
+                id: Number(post.id)
+            }))
+        };
+    } catch (error) {
+        console.error('Erro ao buscar usuário:', error);
+        return null;
+    }
+}
+
+export default async function ProfilePage() {
+    const [posts, user] = await Promise.all([
+        getPostsUser(),
+        getUsers()
+    ]);
+
+    if (!user) {
+        return (
+            <div className="w-full h-screen flex items-center justify-center">
+                <h1 className="text-2xl text-red-600">Usuário não autenticado</h1>
+            </div>
+        );
+    }
 
     return (
-        <main className="w-full">
-            <div className="flex max-w-[100vw] flex-row flex-nowrap justify-start items-start bg-[#F8EEE3] poppins">
-                <div className="bg-verde w-full flex flex-row flex-nowrap justify-between items-center p-6 m-8 rounded-3xl">
-                    <div className="flex flex-row flex-nowrap items-center gap-2">
-                        <Image src={`data:image/png;base64,${users[0].fotoPerfil.trim()}`} alt="foto de perfil" width={200} height={200} />
-                        <h1 className="text-3xl">{users[0].nomeUsuario}</h1>
-                    </div>
-                    <div className="flex flex-row flex-nowrap items-center gap-16">
-                        <div className="text-center text-3xl">
-                            <h1 className="font-black text-7xl">{users[0].posts.length}</h1>
-                            <h1>Publicações</h1>
-                        </div>
-                        <a href="/" className="flex flex-col items-center">
-                            <div className="flex flex-col items-center gap-4 bg-[#EBC895] p-4 rounded-3xl">
-                                <h1 className="text-3xl">Feed</h1>
-                                <Image src="/logo.svg" alt="foto de perfil" width={170} height={170} />
+        <main className="w-full min-h-screen bg-[#F8EEE3]">
+            <div className="max-w-7xl mx-auto p-8">
+                <div className="bg-verde rounded-3xl p-8 shadow-lg">
+                    <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div className="flex items-center gap-6">
+                            <div className="relative w-32 h-32">
+                                <Image
+                                    src={user.fotoPerfil}
+                                    alt="Foto de perfil"
+                                    fill
+                                    className="rounded-full object-cover border-4 border-white"
+                                />
                             </div>
-                        </a>
+                            <h1 className="text-3xl font-bold text-gray-800">
+                                {user.nomeUsuario}
+                            </h1>
+                        </div>
+
+                        <div className="flex md:flex-row flex-col items-center gap-8">
+                            <div className="text-center">
+                                <p className="text-7xl font-black text-white">
+                                    {user.posts.length}
+                                </p>
+                                <p className="text-xl text-gray-600">Publicações</p>
+                            </div>
+
+                            <a
+                                href="/"
+                                className="bg-orange-400 hover:bg-amber-200 transition-colors p-6 rounded-2xl shadow-md"
+                            >
+                                <div className="flex flex-col items-center gap-4">
+                                    <h2 className="text-2xl font-semibold text-gray-800">Feed</h2>
+                                    <div className="relative w-24 h-24">
+                                        <Image
+                                            src="/logo.svg"
+                                            alt="Logo do Feed"
+                                            fill
+                                            className="hover:scale-105 transition-transform"
+                                        />
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
                     </div>
                 </div>
 
+                <div className="py-12 grid gap-8">
+                    {posts.length > 0 ? (
+                        posts.map((post) => (
+                            <Postcard
+                                key={post.id}
+                                {...post}
+                            />
+                        ))
+                    ) : (
+                        <div className="text-center py-12">
+                            <p className="text-xl text-gray-500">
+                                Nenhuma publicação encontrada
+                            </p>
+                        </div>
+                    )}
+                </div>
             </div>
-            <div className="p-10 flex flex-col flex-nowrap itens-center gap-4 bg-[#F8EEE3] poppins">
-                {Array.isArray(posts) && posts.map((post) => (
-                    <Postcard
-                        key={post.id}
-                        id={post.id}
-                        nomeusuario={post.nomeusuario}
-                        perfil={post.perfil}
-                        capa={post.capa}
-                        titulo={post.titulo}
-                        titulolivro={post.titulolivro}
-                        rating={post.rating}
-                        descricao={post.descricao}
-                    />
-                ))}
-            </div>
-
         </main>
     );
 }
