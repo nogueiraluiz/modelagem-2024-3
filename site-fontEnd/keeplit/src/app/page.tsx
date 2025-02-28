@@ -3,6 +3,7 @@ import Postcard from "@/components/ui/postcard";
 import Sidebar from "@/components/ui/sidebar";
 import { FiSearch } from "react-icons/fi";
 import { setupAPIClient } from './services/api';
+import { cookies } from "next/headers";
 
 const axios = setupAPIClient();
 
@@ -18,7 +19,7 @@ async function getPosts() {
 
 async function getUsers() {
   try {
-    const response = await axios.get('/usuarios');
+    const response = await axios.get('/usuarios/' + (await cookies()).get('userid')?.value);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -33,8 +34,8 @@ export default async function Home() {
   return (
     <main className="flex flex-row flex-nowrap justify-start items-start bg-[#F8EEE3] poppins">
       <Sidebar
-        caminhoimagem={users?.[3]?.fotoPerfil?.trim() || ''}
-        nomeusuario={users?.[3]?.nomeUsuario || ''}
+        caminhoimagem={users?.fotoPerfil?.trim() || ''}
+        nomeusuario={users?.nomeUsuario || ''}
       />
 
       <div className="flex flex-col grow gap-4 p-4 h-screen overflow-y-scroll pb-24 xl:pb-4">
