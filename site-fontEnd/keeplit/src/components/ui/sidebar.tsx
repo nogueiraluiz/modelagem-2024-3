@@ -83,20 +83,22 @@ export default function Sidebar() {
                     <Title title="KeepLit" />
                 </div>
                 <div className="flex flex-row flex-nowrap justify-start p-4">
-                    <div className="flex flex-row flex-nowrap justify-center items-center p-4 gap-3">
-                        <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white">
-                            <Image
-                                src={user.fotoPerfil || '/default-avatar.png'}
-                                className=" object-cover"
-                                width={75}
-                                height={75}
-                                alt={user.nomeUsuario}
-                            />
+                    <a href={`/perfil/${user.id}`} className="flex flex-col items-center gap-2">
+                        <div className="flex flex-row flex-nowrap justify-center items-center p-4 gap-3">
+                            <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white">
+                                <Image
+                                    src={(user.fotoPerfil?.trim() || '/logo.svg')}
+                                    className=" object-cover"
+                                    width={75}
+                                    height={75}
+                                    alt={user.nomeUsuario}
+                                />
+                            </div>
+                            <p className="text-2xl truncate max-w-[150px]">
+                                {user.nomeUsuario}
+                            </p>
                         </div>
-                        <p className="text-2xl truncate max-w-[150px]">
-                            {user.nomeUsuario}
-                        </p>
-                    </div>
+                    </a>
                 </div>
             </div>
             <button

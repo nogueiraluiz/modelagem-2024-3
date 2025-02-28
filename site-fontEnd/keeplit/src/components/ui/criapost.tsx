@@ -269,8 +269,9 @@ export default function Criaposts() {
             if (fileInputRef.current) fileInputRef.current.value = '';
 
             if (isMobile) setShowModal(false);
-
             console.log('Post criado com sucesso:', response.data);
+            window.location.reload();
+
 
         } catch (error) {
             console.error('Erro ao criar post:', error);
