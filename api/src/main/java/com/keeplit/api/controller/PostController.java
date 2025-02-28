@@ -50,13 +50,13 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<PostDTO> criarPost(
+    public ResponseEntity<Void> criarPost(
             @RequestHeader("Usuario-Id") Long usuarioId,
             @Valid @RequestBody CriarPostDTO postDTO) {
-
+            
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-
+            
         Post post = new Post();
         post.setTitulo(postDTO.titulo());
         post.setTexto(postDTO.texto());
@@ -65,9 +65,11 @@ public class PostController {
         post.setImagem(postDTO.imagem());
         post.setUsuario(usuario);
         post.setAutoresLivro(postDTO.autoresLivro());
-        Post postSalvo = postRepository.save(post);
-
-        return ResponseEntity.ok(PostDTO.fromEntity(postSalvo));
+            
+        postRepository.save(post);
+            
+        return ResponseEntity.noContent().build();
     }
+
 
 }
