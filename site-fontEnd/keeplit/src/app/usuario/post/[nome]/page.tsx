@@ -60,26 +60,29 @@ const axios = setupAPIClient();
 
 interface UserProfileProps {
   name: string;
+  id: string | number;
 }
 
-const UserProfile = ({ name }: UserProfileProps) => (
+const UserProfile = ({ name, id }: UserProfileProps) => (
   <div className="flex flex-col items-center gap-4">
-    <div
-      className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-600 text-2xl font-bold text-white"
-      role="img"
-      aria-label={`Avatar de ${name}`}
-    >
-      {name[0]?.toUpperCase()}
-    </div>
-    <h2 className="text-lg font-medium text-white" aria-label="Nome do usuário">
-      {name}
-    </h2>
+    <a href={`/perfil/${id}`}>
+      <div
+        className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-600 text-2xl font-bold text-white"
+        role="img"
+        aria-label={`Avatar de ${name}`}
+      >
+        {name[0]?.toUpperCase()}
+      </div>
+      <h2 className="text-lg font-medium text-white" aria-label="Nome do usuário">
+        {name}
+      </h2>
+    </a>
   </div>
 );
 
 interface PageParams {
-  [key: string]: string | string[] | undefined;
-  nome?: string | string[];
+  [key: string]: string | string[];
+  nome: string;
 }
 
 export default function Home() {
@@ -110,6 +113,7 @@ export default function Home() {
     }
   }
 
+
   useEffect(() => {
     getPosts();
     getUsuarioLogado();
@@ -126,14 +130,14 @@ export default function Home() {
   return (
     <div className="flex h-screen bg-white">
       <Sidebar
-        caminhoimagem="/logo.svg"
+        caminhoimagem={usuarioLogado?.fotoPerfil || ""}
         nomeusuario={usuarioLogado?.nomeUsuario || "Usuário"}
       />
 
       <main className="flex flex-1 flex-col gap-4 p-4">
         <header className="mx-auto flex w-[95%] items-center justify-between rounded-[31.5px] bg-[#709A7C] px-9 py-4">
           <div className="flex flex-col items-center">
-            <UserProfile name={post.autor.nomeUsuario} />
+            <UserProfile name={post.autor.nomeUsuario} id={post.autor.id} />
           </div>
 
           <div className="-mt-5 flex flex-col items-center gap-2">
